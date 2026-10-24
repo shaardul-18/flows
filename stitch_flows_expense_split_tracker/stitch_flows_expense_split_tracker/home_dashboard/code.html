@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&amp;family=Manrope:wght@400;500;600&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-tertiary-container": "#5c0008", "on-primary-container": "#0d0096", "surface-container-lowest": "#060e20", "surface-tint": "#c0c1ff", "on-surface": "#dae2fd", "on-primary-fixed-variant": "#2f2ebe", "surface-bright": "#31394d", "surface-dim": "#0b1326", "on-secondary-fixed": "#002113", "on-primary-fixed": "#07006c", "secondary": "#4edea3", "on-tertiary-fixed": "#410004", "secondary-fixed": "#6ffbbe", "on-tertiary-fixed-variant": "#930013", "tertiary-container": "#ff5451", "on-secondary-fixed-variant": "#005236", "on-secondary-container": "#00311f", "on-surface-variant": "#c7c4d7", "secondary-container": "#00a572", "primary-fixed-dim": "#c0c1ff", "outline-variant": "#464554", "secondary-fixed-dim": "#4edea3", "surface-variant": "#2d3449", "primary": "#c0c1ff", "inverse-surface": "#dae2fd", "tertiary-fixed-dim": "#ffb3ad", "surface-container-highest": "#2d3449", "background": "#0b1326", "on-primary": "#1000a9", "surface-container-low": "#131b2e", "primary-container": "#8083ff", "inverse-primary": "#494bd6", "on-secondary": "#003824", "tertiary-fixed": "#ffdad7", "inverse-on-surface": "#283044", "primary-fixed": "#e1e0ff", "tertiary": "#ffb3ad", "outline": "#908fa0", "error": "#ffb4ab", "on-error": "#690005", "surface": "#0b1326", "on-tertiary": "#68000a", "surface-container": "#171f33", "on-background": "#dae2fd", "error-container": "#93000a", "surface-container-high": "#222a3d", "on-error-container": "#ffdad6" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-xl": "1.5rem", "margin-desktop": "2.5rem", "margin": "1rem", "gutter-desktop": "1.5rem", "space-lg": "1rem", "space-md": "0.75rem", "gutter": "0.75rem", "space-xs": "0.25rem", "gutter-tablet": "1rem", "space-sm": "0.5rem", "margin-tablet": "1.5rem" }, fontFamily: { "label-caps": ["JetBrains Mono"], "currency-sm": ["JetBrains Mono"], "currency-lg": ["JetBrains Mono"], "body-lg": ["Manrope"], "headline-md": ["Space Grotesk"], "headline-lg": ["Space Grotesk"], "headline-sm": ["Space Grotesk"], "display-lg-mobile": ["Space Grotesk"], "body-md": ["Manrope"], "label-sm": ["Manrope"], "body-sm": ["Manrope"], "display-lg": ["Space Grotesk"], "currency-md": ["JetBrains Mono"] }, fontSize: { "label-caps": ["11px", { "lineHeight": "14px", "letterSpacing": "0.06em", "fontWeight": "600" }], "currency-sm": ["14px", { "lineHeight": "20px", "fontWeight": "500" }], "currency-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "500" }], "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "headline-sm": ["16px", { "lineHeight": "24px", "fontWeight": "600" }], "display-lg-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "label-sm": ["11px", { "lineHeight": "14px", "fontWeight": "500" }], "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }], "display-lg": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.03em", "fontWeight": "700" }], "currency-md": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }] } } } };</script><style>@layer base{html,body{width:100%;margin:0;padding:0;background-color:#0b1326;color:#dae2fd;-webkit-tap-highlight-color:transparent;}body{overscroll-behavior-y:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style></head><body class="bg-surface font-body-md text-on-surface flex flex-col min-h-screen selection:bg-secondary selection:text-on-secondary"><header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl pt-safe"><div class="h-16 px-margin flex items-center justify-between"><div class="flex items-center gap-space-sm"><img alt="Flows Brand Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1We8S3vp8gnXtd74CQwWsZ4dqlEqe8cBA2j4T64iSSld3jdKDAI9eqjH7f6DBT7hBzF4yGNJ62_3OaRbbEcp-7NukdelYwnqU8bpapWmdwq5wC9lVfjAaKU68YOoIfKfhPgxSs7F3DVPBjnqZ45AhRA2_3fQZap7U9xOql1_hB3zpyBTV6hT75zHJmqlb5VhvT2xhR_grVfTyCzx0fUdSjLnXzBwwnAvAjdLFJ0YhxQuB65eql_Loiwsso"/><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight">Flows</span><span class="font-label-caps text-label-caps text-secondary uppercase">Home</span></div></div><div class="flex items-center gap-space-xs"><button aria-label="Notifications" class="relative w-11 h-11 flex items-center justify-center rounded-full text-on-surface-variant hover:text-on-surface transition-colors"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-secondary-container ring-2 ring-surface"></span></button><button aria-label="Settings" class="w-11 h-11 flex items-center justify-center rounded-full text-on-surface-variant hover:text-on-surface transition-colors"><span class="material-symbols-outlined text-[22px]">settings</span></button><div class="relative flex items-center ml-space-xs"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAesNPfC7zlCmLM2oODZZoMOBrF8WcfM9p_1pkrY-KjgjmAfxNY5ScxyqfShzajbYSVk3RFz6xNXlqN8jMBl8bDUHNKwDJj2Jx0FXN43lMot17tNMKsPy2x6kiCNu1ny5k9q0CNKC8wsHvpf6tsJkifAfFoLBxRqpsWl4K4BVaktNjuP2kwJU270ujwtnj-b08-MUj8-ft8qUj5uxuBnW2bh-iBkcXFSMRS2_t1SydqnpHQR39goXsW"/><span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-secondary rounded-full ring-2 ring-surface"></span></div></div></div></header><main class="flex flex-col relative w-full pt-16 pb-24 px-margin bg-surface"><div class="flex flex-col w-full space-y-space-md">
+<!-- User Header Context -->
+<div class="flex items-center justify-between pt-space-xs">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Good evening,</span>
+<div class="flex items-center gap-space-xs mt-0.5">
+<h1 class="font-headline-md text-headline-md text-on-surface tracking-tight">Hey Shaardul</h1>
+<span class="w-2 h-2 rounded-full bg-secondary ring-4 ring-secondary/20"></span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+<button aria-label="Sync Ledger" class="flex items-center justify-center w-9 h-9 rounded-full bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface-variant active:scale-95" id="refreshBalanceBtn">
+<span class="material-symbols-outlined text-[18px]">sync</span>
+</button>
+<div class="flex items-center gap-1 px-space-sm py-1 rounded-full bg-surface-container-high text-on-surface">
+<span class="material-symbols-outlined text-secondary text-[16px]" style="font-variation-settings: 'FILL' 1;">shield_with_heart</span>
+<span class="font-label-caps text-label-caps text-secondary uppercase">Synced</span>
+</div>
+</div>
+</div>
+<!-- Balance Overview Card -->
+<section class="relative overflow-hidden rounded-xl bg-surface-container p-5 shadow-lg">
+<!-- Subtle luminous ambient backdrop -->
+<div class="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-primary/10 blur-2xl pointer-events-none"></div>
+<div class="absolute -left-8 -bottom-8 w-32 h-32 rounded-full bg-secondary/10 blur-2xl pointer-events-none"></div>
+<div class="relative flex flex-col z-10">
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Total Available Balance</span>
+<button aria-label="Toggle Balance Visibility" class="text-on-surface-variant hover:text-on-surface transition-colors" id="toggleBalanceVisibility">
+<span class="material-symbols-outlined text-[18px]" id="eyeIcon">visibility</span>
+</button>
+</div>
+<div class="flex items-baseline gap-space-xs my-space-xs">
+<span class="font-currency-lg text-currency-lg text-on-surface font-bold tracking-tight" id="balanceText">₹1,42,850.00</span>
+<span class="font-label-caps text-[10px] text-secondary font-medium px-1.5 py-0.5 rounded bg-secondary/15">+2.4% vs last wk</span>
+</div>
+<!-- Sub-breakdown Row -->
+<div class="grid grid-cols-2 gap-space-sm mt-space-sm">
+<!-- Left Pill: Bank & UPI Balance -->
+<div class="flex flex-col p-2.5 rounded-xl bg-surface-container-lowest/80 backdrop-blur-sm">
+<div class="flex items-center gap-1.5 mb-1">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Bank &amp; UPI</span>
+</div>
+<span class="font-currency-sm text-currency-sm text-on-surface font-semibold truncate">₹1,38,350.00</span>
+<span class="font-label-caps text-[10px] text-primary mt-0.5">3 Accounts Linked</span>
+</div>
+<!-- Right Pill: Cash in Hand -->
+<div class="flex flex-col p-2.5 rounded-xl bg-surface-container-lowest/80 backdrop-blur-sm">
+<div class="flex items-center gap-1.5 mb-1">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Cash in Hand</span>
+</div>
+<span class="font-currency-sm text-currency-sm text-on-surface font-semibold truncate">₹4,500.00</span>
+<span class="font-label-caps text-[10px] text-secondary mt-0.5">Reconciled Today</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Monthly Budget Utilization & Leak Banner -->
+<section class="rounded-xl bg-surface-container p-4 shadow-md flex flex-col">
+<!-- Header row -->
+<div class="flex items-center justify-between mb-2.5">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">pie_chart</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">October Budget</span>
+</div>
+<div class="flex items-center px-2 py-0.5 rounded-full bg-secondary/15 text-secondary">
+<span class="font-label-caps text-label-caps font-semibold">62% Used</span>
+</div>
+</div>
+<!-- Horizontal sleek segmented progress bar -->
+<div class="w-full h-2 rounded-full bg-surface-container-high overflow-hidden my-1 flex">
+<div class="h-full bg-secondary rounded-full transition-all duration-700 ease-out" style="width: 62%;"></div>
+</div>
+<!-- Label below bar -->
+<div class="flex items-center justify-between mt-1 text-on-surface-variant">
+<span class="font-currency-sm text-body-sm font-label-caps">₹31,000 spent</span>
+<span class="font-currency-sm text-body-sm font-label-caps text-secondary">₹19,000 remaining</span>
+</div>
+<!-- Micro-Leak Alert Banner -->
+<div class="flex items-start gap-2.5 mt-space-md p-3 rounded-xl bg-tertiary-container/15 text-on-surface">
+<div class="flex-shrink-0 w-6 h-6 rounded-lg bg-tertiary-container/30 flex items-center justify-center text-tertiary mt-0.5">
+<span class="material-symbols-outlined text-[16px]">local_fire_department</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-[11px] font-semibold text-tertiary uppercase tracking-wider">Micro-Leak Detected</span>
+<span class="font-label-caps text-[10px] text-tertiary/80">31 small txns</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 leading-snug">
+          You spent <span class="font-currency-sm text-body-sm text-on-surface font-semibold">₹1,420</span> on Chai &amp; Snacks (<span class="font-currency-sm text-[11px]">under ₹200</span>) this month.
+        </p>
+</div>
+</div>
+</section>
+<!-- Primary Action Row (2 Prominent Action Buttons side-by-side) -->
+<div class="grid grid-cols-2 gap-space-sm pt-space-xs">
+<!-- Primary CTA: Log Cash Transaction -->
+<button class="h-12 px-space-md rounded-xl bg-secondary-container text-on-secondary font-headline-sm text-headline-sm flex items-center justify-center gap-2 shadow-lg hover:opacity-95 active:scale-[0.98] transition-all" id="logCashBtn">
+<span class="material-symbols-outlined text-[20px]">payments</span>
+<span class="truncate">+ Log Cash</span>
+</button>
+<!-- Secondary CTA: Split a Bill -->
+<button class="h-12 px-space-md rounded-xl bg-surface-container-high text-primary font-headline-sm text-headline-sm flex items-center justify-center gap-2 hover:bg-surface-bright active:scale-[0.98] transition-all" id="splitBillBtn">
+<span class="material-symbols-outlined text-[20px]">group_add</span>
+<span class="truncate">Split a Bill</span>
+</button>
+</div>
+<!-- Quick Category Snapshot Carousel -->
+<div class="flex items-center gap-space-sm overflow-x-auto py-1 no-scrollbar">
+<div class="flex items-center gap-2 px-3 py-2 rounded-xl bg-surface-container shrink-0">
+<div class="w-7 h-7 rounded-lg bg-surface-container-highest flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[16px]">trending_down</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-caps text-[10px] text-on-surface-variant uppercase">Daily Run Rate</span>
+<span class="font-currency-sm text-currency-sm font-semibold text-on-surface">₹980 / day</span>
+</div>
+</div>
+<div class="flex items-center gap-2 px-3 py-2 rounded-xl bg-surface-container shrink-0">
+<div class="w-7 h-7 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[16px]">hourglass_top</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-caps text-[10px] text-on-surface-variant uppercase">Pending Splits</span>
+<span class="font-currency-sm text-currency-sm font-semibold text-primary">₹1,240 owed</span>
+</div>
+</div>
+<div class="flex items-center gap-2 px-3 py-2 rounded-xl bg-surface-container shrink-0">
+<div class="w-7 h-7 rounded-lg bg-surface-container-highest flex items-center justify-center text-secondary-fixed">
+<span class="material-symbols-outlined text-[16px]">savings</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-caps text-[10px] text-on-surface-variant uppercase">Auto-Save Vault</span>
+<span class="font-currency-sm text-currency-sm font-semibold text-on-surface">₹12,400</span>
+</div>
+</div>
+</div>
+<!-- Recent Transactions Feed -->
+<section class="flex flex-col pt-space-xs">
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-1.5">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Recent Activity</h2>
+<span class="px-1.5 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-caps text-[10px]">3 New</span>
+</div>
+<a class="font-label-caps text-label-caps text-primary hover:text-primary-fixed transition-colors flex items-center gap-0.5" href="#">
+        See All
+        <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</a>
+</div>
+<div class="flex flex-col space-y-space-xs">
+<!-- Item 1 (UPI Debit) -->
+<div class="group flex items-center justify-between p-space-md rounded-xl bg-surface-container hover:bg-surface-container-high transition-colors cursor-pointer">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-xl bg-tertiary/15 flex items-center justify-center text-tertiary shrink-0">
+<span class="material-symbols-outlined text-[20px]">restaurant</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-lg text-body-lg text-on-surface font-semibold truncate">Swiggy - Dinner</span>
+<div class="flex items-center gap-1.5 mt-0.5 flex-wrap">
+<span class="font-label-caps text-[10px] px-1.5 py-0.2 rounded bg-primary/15 text-primary">UPI • HDFC</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Today, 8:15 PM</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0 pl-2">
+<span class="font-currency-md text-currency-md text-on-surface font-bold font-mono">- ₹480.00</span>
+<div class="flex items-center gap-1 mt-0.5 text-secondary">
+<span class="material-symbols-outlined text-[13px]">people</span>
+<span class="font-label-caps text-[10px]">Split (2 people)</span>
+</div>
+</div>
+</div>
+<!-- Item 2 (Cash Expense) -->
+<div class="group flex items-center justify-between p-space-md rounded-xl bg-surface-container hover:bg-surface-container-high transition-colors cursor-pointer">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-xl bg-primary/15 flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-[20px]">directions_subway</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-lg text-body-lg text-on-surface font-semibold truncate">Local Auto Fare</span>
+<div class="flex items-center gap-1.5 mt-0.5 flex-wrap">
+<span class="font-label-caps text-[10px] px-1.5 py-0.2 rounded bg-secondary/15 text-secondary">CASH</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Today, 5:30 PM</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0 pl-2">
+<span class="font-currency-md text-currency-md text-on-surface font-bold font-mono">- ₹90.00</span>
+<span class="font-label-caps text-[10px] text-on-surface-variant mt-0.5">Commute</span>
+</div>
+</div>
+<!-- Item 3 (UPI Credit / Income) -->
+<div class="group flex items-center justify-between p-space-md rounded-xl bg-surface-container hover:bg-surface-container-high transition-colors cursor-pointer">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-xl bg-secondary/15 flex items-center justify-center text-secondary shrink-0">
+<span class="material-symbols-outlined text-[20px]">download_done</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-lg text-body-lg text-on-surface font-semibold truncate">Reimbursement from Rahul</span>
+<div class="flex items-center gap-1.5 mt-0.5 flex-wrap">
+<span class="font-label-caps text-[10px] px-1.5 py-0.2 rounded bg-primary-container/20 text-primary-fixed">UPI • PhonePe</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Yesterday</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0 pl-2">
+<span class="font-currency-md text-currency-md text-secondary font-bold font-mono">+ ₹350.00</span>
+<span class="font-label-caps text-[10px] text-secondary/80 mt-0.5">Settled</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Interactive Modal Drawer for Quick Cash Logging (Hidden by Default) -->
+<div class="fixed inset-0 z-50 bg-surface-container-lowest/80 backdrop-blur-md flex flex-col justify-end transition-opacity duration-300 opacity-0 pointer-events-none" id="cashModal">
+<div class="w-full bg-surface-container-high rounded-t-2xl p-5 shadow-2xl flex flex-col space-y-4 max-w-lg mx-auto transform transition-transform duration-300 translate-y-full" id="cashModalSheet">
+<div class="flex items-center justify-between pb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[22px]">payments</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Record Cash Expense</span>
+</div>
+<button class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-on-surface" id="closeModalBtn">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<div class="flex flex-col space-y-1">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase">Amount Spent</label>
+<div class="flex items-center bg-surface-container-lowest px-4 py-3 rounded-xl">
+<span class="font-currency-lg text-currency-lg text-secondary font-bold">₹</span>
+<input autofocus="" class="w-full bg-transparent font-currency-lg text-currency-lg text-on-surface ml-2 focus:outline-none" id="cashAmountInput" placeholder="0.00" type="number"/>
+</div>
+</div>
+<div class="flex flex-col space-y-1">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase">Note or Merchant</label>
+<input class="w-full bg-surface-container-lowest px-4 py-3 rounded-xl font-body-md text-body-md text-on-surface focus:outline-none" id="cashNoteInput" placeholder="e.g. Chai, Auto, Groceries" type="text"/>
+</div>
+<div class="flex gap-2 pt-2">
+<button class="w-full h-12 bg-secondary-container text-on-secondary rounded-xl font-headline-sm text-headline-sm flex items-center justify-center gap-2 shadow-md active:scale-95 transition-all" id="confirmCashBtn">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+          Save to Ledger
+        </button>
+</div>
+</div>
+</div>
+</div>
+<script>
+  (function () {
+    // Visibility toggle for balance
+    const toggleBtn = document.getElementById('toggleBalanceVisibility');
+    const balanceText = document.getElementById('balanceText');
+    const eyeIcon = document.getElementById('eyeIcon');
+    let isHidden = false;
+
+    if (toggleBtn && balanceText && eyeIcon) {
+      toggleBtn.addEventListener('click', () => {
+        isHidden = !isHidden;
+        if (isHidden) {
+          balanceText.innerText = '₹ ••••••••';
+          eyeIcon.innerText = 'visibility_off';
+        } else {
+          balanceText.innerText = '₹1,42,850.00';
+          eyeIcon.innerText = 'visibility';
+        }
+      });
+    }
+
+    // Refresh animation feedback
+    const refreshBtn = document.getElementById('refreshBalanceBtn');
+    if (refreshBtn) {
+      refreshBtn.addEventListener('click', () => {
+        const icon = refreshBtn.querySelector('.material-symbols-outlined');
+        if (icon) {
+          icon.classList.add('animate-spin');
+          setTimeout(() => {
+            icon.classList.remove('animate-spin');
+          }, 650);
+        }
+      });
+    }
+
+    // Cash Modal Drawer Interactions
+    const logCashBtn = document.getElementById('logCashBtn');
+    const cashModal = document.getElementById('cashModal');
+    const cashModalSheet = document.getElementById('cashModalSheet');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const confirmCashBtn = document.getElementById('confirmCashBtn');
+
+    function openModal() {
+      if (!cashModal || !cashModalSheet) return;
+      cashModal.classList.remove('opacity-0', 'pointer-events-none');
+      cashModal.classList.add('opacity-100');
+      cashModalSheet.classList.remove('translate-y-full');
+      cashModalSheet.classList.add('translate-y-0');
+      const input = document.getElementById('cashAmountInput');
+      if (input) setTimeout(() => input.focus(), 150);
+    }
+
+    function closeModal() {
+      if (!cashModal || !cashModalSheet) return;
+      cashModal.classList.add('opacity-0', 'pointer-events-none');
+      cashModal.classList.remove('opacity-100');
+      cashModalSheet.classList.add('translate-y-full');
+      cashModalSheet.classList.remove('translate-y-0');
+    }
+
+    if (logCashBtn) logCashBtn.addEventListener('click', openModal);
+    if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+    if (cashModal) {
+      cashModal.addEventListener('click', (e) => {
+        if (e.target === cashModal) closeModal();
+      });
+    }
+
+    if (confirmCashBtn) {
+      confirmCashBtn.addEventListener('click', () => {
+        confirmCashBtn.innerText = 'Saved!';
+        setTimeout(() => {
+          confirmCashBtn.innerHTML = '<span class="material-symbols-outlined text-[20px]">check_circle</span> Save to Ledger';
+          closeModal();
+        }, 500);
+      });
+    }
+  })();
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/85 backdrop-blur-xl" data-active-classes="text-secondary font-semibold"><div class="flex justify-around items-center h-16 px-space-xs"><a aria-current="page" class="flex flex-col items-center justify-center w-16 h-12 transition-colors text-secondary font-semibold" data-path="home" href="#"><span class="material-symbols-outlined text-[22px]">home</span><span class="font-label-sm text-label-sm mt-1">Home</span></a><a class="flex flex-col items-center justify-center w-16 h-12 text-on-surface-variant transition-colors hover:text-on-surface" data-path="transactions" href="#"><span class="material-symbols-outlined text-[22px]">receipt_long</span><span class="font-label-sm text-label-sm mt-1">Transactions</span></a><a class="flex flex-col items-center justify-center w-16 h-12 text-on-surface-variant transition-colors hover:text-on-surface" data-path="analytics" href="#"><span class="material-symbols-outlined text-[22px]">bar_chart</span><span class="font-label-sm text-label-sm mt-1">Analytics</span></a><a class="flex flex-col items-center justify-center w-16 h-12 text-on-surface-variant transition-colors hover:text-on-surface" data-path="splits" href="#"><span class="material-symbols-outlined text-[22px]">group</span><span class="font-label-sm text-label-sm mt-1">Splits</span></a></div></nav></body></html>

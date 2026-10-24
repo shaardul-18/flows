@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_export" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&amp;family=Manrope:wght@400;500;600;700&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "surface-variant": "#2d3449", "on-secondary-fixed": "#002113", "primary-fixed-dim": "#c0c1ff", "on-primary-container": "#0d0096", "secondary-fixed": "#6ffbbe", "on-background": "#dae2fd", "on-error": "#690005", "inverse-on-surface": "#283044", "on-primary-fixed": "#07006c", "surface-bright": "#31394d", "surface-container-low": "#131b2e", "on-surface": "#dae2fd", "surface-tint": "#c0c1ff", "outline-variant": "#464554", "tertiary-fixed-dim": "#ffb3ad", "secondary": "#4edea3", "primary-container": "#8083ff", "on-tertiary-fixed-variant": "#930013", "surface-container-lowest": "#060e20", "inverse-primary": "#494bd6", "on-secondary-fixed-variant": "#005236", "on-tertiary": "#68000a", "surface": "#0b1326", "tertiary-container": "#ff5451", "secondary-container": "#00a572", "secondary-fixed-dim": "#4edea3", "error-container": "#93000a", "primary-fixed": "#e1e0ff", "on-error-container": "#ffdad6", "inverse-surface": "#dae2fd", "surface-container-highest": "#2d3449", "on-tertiary-fixed": "#410004", "surface-container": "#171f33", "error": "#ffb4ab", "surface-dim": "#0b1326", "tertiary-fixed": "#ffdad7", "primary": "#c0c1ff", "background": "#0b1326", "tertiary": "#ffb3ad", "on-primary": "#1000a9", "outline": "#908fa0", "on-primary-fixed-variant": "#2f2ebe", "on-secondary-container": "#00311f", "surface-container-high": "#222a3d", "on-tertiary-container": "#5c0008", "on-surface-variant": "#c7c4d7", "on-secondary": "#003824" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-lg": "1rem", "margin": "1rem", "space-xs": "0.25rem", "space-sm": "0.5rem", "space-md": "0.75rem", "margin-desktop": "2.5rem", "gutter-tablet": "1rem", "space-xl": "1.5rem", "gutter": "0.75rem", "gutter-desktop": "1.5rem", "margin-tablet": "1.5rem" }, fontFamily: { "body-lg": ["Manrope"], "currency-sm": ["JetBrains Mono"], "label-sm": ["Manrope"], "currency-md": ["JetBrains Mono"], "headline-lg": ["Space Grotesk"], "currency-lg": ["JetBrains Mono"], "label-caps": ["JetBrains Mono"], "headline-sm": ["Space Grotesk"], "display-lg-mobile": ["Space Grotesk"], "body-md": ["Manrope"], "body-sm": ["Manrope"], "display-lg": ["Space Grotesk"], "headline-md": ["Space Grotesk"] }, fontSize: { "body-lg": ["16px", { lineHeight: "24px", fontWeight: "500" }], "currency-sm": ["14px", { lineHeight: "20px", fontWeight: "500" }], "label-sm": ["11px", { lineHeight: "14px", fontWeight: "500" }], "currency-md": ["18px", { lineHeight: "24px", letterSpacing: "-0.01em", fontWeight: "600" }], "headline-lg": ["24px", { lineHeight: "32px", letterSpacing: "-0.02em", fontWeight: "600" }], "currency-lg": ["28px", { lineHeight: "36px", letterSpacing: "-0.02em", fontWeight: "700" }], "label-caps": ["11px", { lineHeight: "14px", letterSpacing: "0.06em", fontWeight: "600" }], "headline-sm": ["16px", { lineHeight: "24px", fontWeight: "600" }], "display-lg-mobile": ["28px", { lineHeight: "36px", letterSpacing: "-0.02em", fontWeight: "700" }], "body-md": ["14px", { lineHeight: "20px", fontWeight: "400" }], "body-sm": ["12px", { lineHeight: "16px", fontWeight: "400" }], "display-lg": ["36px", { lineHeight: "44px", letterSpacing: "-0.03em", fontWeight: "700" }], "headline-md": ["20px", { lineHeight: "28px", letterSpacing: "-0.01em", fontWeight: "600" }] } } } }</script><style>@layer base{html,body{width:100%;min-height:100vh;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] pt-safe"><div class="h-16 px-margin flex items-center justify-between"><button class="h-11 px-space-sm -ml-space-sm flex items-center gap-space-xs text-on-surface hover:text-primary transition-colors" onclick="history.back()"><span class="material-symbols-outlined text-[20px]">arrow_back</span><span class="font-headline-sm text-headline-sm">Export Transactions</span></button><div class="flex items-center gap-space-sm"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><button class="w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors" onclick="window.location.href='#'"><span class="material-symbols-outlined text-[22px]">close</span></button></div></div></header><main class="flex-1 flex flex-col relative w-full px-margin pt-16 pb-safe bg-surface"><div class="flex flex-col w-full pb-8">
+<!-- Header Info Card -->
+<div class="relative overflow-hidden rounded-xl bg-surface-container p-space-lg mb-space-lg shadow-sm">
+<div class="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-secondary-container/10 blur-2xl pointer-events-none"></div>
+<div class="flex items-start gap-space-md relative z-10">
+<div class="relative flex-shrink-0 w-12 h-12 rounded-xl bg-surface-container-high flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">table_chart</span>
+<span class="absolute -bottom-1 -right-1 px-1.5 py-0.5 rounded-full bg-secondary text-on-secondary font-label-caps text-label-caps font-bold">XLSX</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-space-xs mb-1">
+<span class="font-headline-sm text-headline-sm text-on-surface">Export Financial Ledger</span>
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+          Download complete transaction history, cash entries, receipt OCR breakdowns, and split logs formatted for Microsoft Excel &amp; Google Sheets.
+        </p>
+</div>
+</div>
+</div>
+<!-- Format Selector -->
+<div class="mb-space-lg">
+<div class="flex items-center justify-between mb-space-sm px-1">
+<span class="font-headline-sm text-headline-sm text-on-surface">Target Format</span>
+<span class="font-label-caps text-label-caps text-secondary-fixed">EXCEL ENGINE V3.4</span>
+</div>
+<div class="flex flex-col gap-space-sm" id="format-group">
+<!-- Excel Option (Selected) -->
+<button class="format-btn w-full text-left p-space-md rounded-xl bg-surface-container-high relative transition-all duration-200" onclick="selectFormat(this, 'xlsx')" type="button">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[20px]">grid_on</span>
+</div>
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-on-surface">Excel Workbook (.XLSX)</span>
+<span class="px-space-xs py-0.5 rounded-full bg-secondary/15 text-secondary font-label-caps text-label-caps">RECOMMENDED</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Multi-sheet ledger with auto-sum formulas, tax tags &amp; charts</p>
+</div>
+</div>
+<span class="format-radio w-5 h-5 rounded-full bg-secondary flex items-center justify-center text-on-secondary text-[14px]">
+<span class="material-symbols-outlined text-[14px] font-bold">check</span>
+</span>
+</div>
+</button>
+<!-- CSV Option -->
+<button class="format-btn w-full text-left p-space-md rounded-xl bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all duration-200" onclick="selectFormat(this, 'csv')" type="button">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-surface-container-low flex items-center justify-center text-outline">
+<span class="material-symbols-outlined text-[20px]">reorder</span>
+</div>
+<div>
+<span class="font-headline-sm text-headline-sm text-on-surface">CSV Spreadsheet (.CSV)</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Plain tabular text for Tally Prime, QuickBooks &amp; custom scripts</p>
+</div>
+</div>
+<span class="format-radio w-5 h-5 rounded-full bg-surface-container-low flex items-center justify-center text-outline text-[14px]">
+</span>
+</div>
+</button>
+<!-- PDF Option -->
+<button class="format-btn w-full text-left p-space-md rounded-xl bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all duration-200" onclick="selectFormat(this, 'pdf')" type="button">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-surface-container-low flex items-center justify-center text-outline">
+<span class="material-symbols-outlined text-[20px]">picture_as_pdf</span>
+</div>
+<div>
+<span class="font-headline-sm text-headline-sm text-on-surface">Statement Report (.PDF)</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Clean visual audit summary with monthly analytics breakdown</p>
+</div>
+</div>
+<span class="format-radio w-5 h-5 rounded-full bg-surface-container-low flex items-center justify-center text-outline text-[14px]">
+</span>
+</div>
+</button>
+</div>
+</div>
+<!-- Date Range Section -->
+<div class="mb-space-lg">
+<div class="flex items-center justify-between mb-space-sm px-1">
+<span class="font-headline-sm text-headline-sm text-on-surface">Accounting Period</span>
+<span class="font-body-sm text-body-sm text-primary">Custom Dates</span>
+</div>
+<!-- Pills Grid -->
+<div class="grid grid-cols-2 gap-space-xs mb-space-sm">
+<button class="period-pill py-2.5 px-space-sm rounded-lg bg-primary-container text-on-primary-container font-headline-sm text-headline-sm flex items-center justify-center gap-space-xs" onclick="setPeriod(this, '01 Oct 2026 – 24 Oct 2026', '128')" type="button">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+<span>This Month (Oct '26)</span>
+</button>
+<button class="period-pill py-2.5 px-space-sm rounded-lg bg-surface-container text-on-surface-variant font-headline-sm text-headline-sm hover:text-on-surface flex items-center justify-center gap-space-xs" onclick="setPeriod(this, '01 Aug 2026 – 24 Oct 2026', '412')" type="button">
+<span>Last 3 Months</span>
+</button>
+<button class="period-pill py-2.5 px-space-sm rounded-lg bg-surface-container text-on-surface-variant font-headline-sm text-headline-sm hover:text-on-surface flex items-center justify-center gap-space-xs" onclick="setPeriod(this, '01 Apr 2026 – 24 Oct 2026', '1,094')" type="button">
+<span>FY 2026-27 (YTD)</span>
+</button>
+<button class="period-pill py-2.5 px-space-sm rounded-lg bg-surface-container text-on-surface-variant font-headline-sm text-headline-sm hover:text-on-surface flex items-center justify-center gap-space-xs" onclick="setPeriod(this, '01 Jan 2026 – 24 Oct 2026', '1,420')" type="button">
+<span>Custom Range...</span>
+</button>
+</div>
+<!-- Active Range Banner -->
+<div class="flex items-center justify-between p-space-sm rounded-lg bg-surface-container-low px-space-md">
+<div class="flex items-center gap-space-xs text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-secondary">date_range</span>
+<span class="font-currency-sm text-currency-sm" id="date-label">01 Oct 2026 – 24 Oct 2026</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="font-label-caps text-label-caps text-on-surface-variant" id="tx-count">128 TRANSACTIONS</span>
+</div>
+</div>
+</div>
+<!-- Include Data Fields Checklist -->
+<div class="mb-space-lg">
+<div class="flex items-center justify-between mb-space-sm px-1">
+<span class="font-headline-sm text-headline-sm text-on-surface">Worksheets &amp; Meta-Layers</span>
+<span class="font-label-caps text-label-caps text-outline">4 OF 4 ACTIVE</span>
+</div>
+<div class="flex flex-col gap-space-xs">
+<!-- Toggle 1 -->
+<label class="flex items-center justify-between p-space-md rounded-xl bg-surface-container cursor-pointer select-none">
+<div class="flex items-start gap-space-sm pr-2">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-primary-fixed-dim mt-0.5">
+<span class="material-symbols-outlined text-[18px]">account_balance</span>
+</div>
+<div>
+<div class="font-headline-sm text-headline-sm text-on-surface">Bank &amp; UPI Transactions</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Includes VPA IDs, bank account names &amp; bank UTR rails</div>
+</div>
+</div>
+<div class="relative">
+<input checked="" class="sr-only peer" onchange="updateSummary(this)" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-high rounded-full peer peer-checked:bg-secondary peer-checked:after:translate-x-5 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-on-secondary after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+</div>
+</label>
+<!-- Toggle 2 -->
+<label class="flex items-center justify-between p-space-md rounded-xl bg-surface-container cursor-pointer select-none">
+<div class="flex items-start gap-space-sm pr-2">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-secondary mt-0.5">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+</div>
+<div>
+<div class="font-headline-sm text-headline-sm text-on-surface">Manual Cash Ledger</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Cash-in-hand logs, physical merchant tags &amp; petty cash adjustments</div>
+</div>
+</div>
+<div class="relative">
+<input checked="" class="sr-only peer" onchange="updateSummary(this)" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-high rounded-full peer peer-checked:bg-secondary peer-checked:after:translate-x-5 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-on-secondary after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+</div>
+</label>
+<!-- Toggle 3 -->
+<label class="flex items-center justify-between p-space-md rounded-xl bg-surface-container cursor-pointer select-none">
+<div class="flex items-start gap-space-sm pr-2">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-tertiary-fixed mt-0.5">
+<span class="material-symbols-outlined text-[18px]">call_split</span>
+</div>
+<div>
+<div class="font-headline-sm text-headline-sm text-on-surface">Itemized Bill Splits &amp; Reminders</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Dish line-items, contact phone numbers &amp; WhatsApp settlements</div>
+</div>
+</div>
+<div class="relative">
+<input checked="" class="sr-only peer" onchange="updateSummary(this)" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-high rounded-full peer peer-checked:bg-secondary peer-checked:after:translate-x-5 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-on-secondary after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+</div>
+</label>
+<!-- Toggle 4 -->
+<label class="flex items-center justify-between p-space-md rounded-xl bg-surface-container cursor-pointer select-none">
+<div class="flex items-start gap-space-sm pr-2">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-primary-fixed mt-0.5">
+<span class="material-symbols-outlined text-[18px]">document_scanner</span>
+</div>
+<div>
+<div class="font-headline-sm text-headline-sm text-on-surface">OCR Receipt Scan Media Links</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Signed HTTPS deep-links to cloud invoice photos &amp; raw JSON tags</div>
+</div>
+</div>
+<div class="relative">
+<input checked="" class="sr-only peer" onchange="updateSummary(this)" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-high rounded-full peer peer-checked:bg-secondary peer-checked:after:translate-x-5 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-on-secondary after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+</div>
+</label>
+</div>
+</div>
+<!-- Live Spreadsheet Data Preview -->
+<div class="mb-space-lg">
+<div class="flex items-center justify-between mb-space-sm px-1">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-on-surface">Live Worksheet Preview</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container-high text-on-surface-variant font-label-caps text-label-caps">SHEET 1: CONSOLIDATED</span>
+</div>
+<span class="font-label-caps text-label-caps text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">sync</span> LIVE
+      </span>
+</div>
+<!-- Table Card Container -->
+<div class="rounded-xl bg-surface-container p-space-sm overflow-hidden shadow-sm">
+<div class="overflow-x-auto -mx-space-sm px-space-sm">
+<table class="w-full text-left border-collapse min-w-[540px]">
+<thead>
+<tr class="bg-surface-container-lowest text-on-surface-variant font-label-caps text-label-caps">
+<th class="py-2 px-space-sm rounded-l">Date</th>
+<th class="py-2 px-space-sm">Merchant / Note</th>
+<th class="py-2 px-space-sm">Rail / Mode</th>
+<th class="py-2 px-space-sm text-right">Amount (₹)</th>
+<th class="py-2 px-space-sm text-right rounded-r">Split</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-high/40 font-body-sm text-body-sm">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-high/30 transition-colors">
+<td class="py-2.5 px-space-sm font-currency-sm text-currency-sm text-on-surface-variant">24 Oct</td>
+<td class="py-2.5 px-space-sm">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+<span class="text-on-surface font-body-lg text-body-sm">Swiggy Dinner</span>
+</div>
+</td>
+<td class="py-2.5 px-space-sm">
+<span class="px-1.5 py-0.5 rounded-full bg-primary/10 text-primary-fixed-dim font-label-caps text-label-caps">UPI (HDFC)</span>
+</td>
+<td class="py-2.5 px-space-sm font-currency-sm text-currency-sm text-right text-on-surface">-1,200.00</td>
+<td class="py-2.5 px-space-sm text-right">
+<span class="px-1.5 py-0.5 rounded bg-surface-container-high text-primary-fixed font-label-caps text-label-caps">SPLIT (4P)</span>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-high/30 transition-colors">
+<td class="py-2.5 px-space-sm font-currency-sm text-currency-sm text-on-surface-variant">24 Oct</td>
+<td class="py-2.5 px-space-sm">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+<span class="text-on-surface font-body-lg text-body-sm">Local Auto Fare</span>
+</div>
+</td>
+<td class="py-2.5 px-space-sm">
+<span class="px-1.5 py-0.5 rounded-full bg-secondary/10 text-secondary font-label-caps text-label-caps">CASH</span>
+</td>
+<td class="py-2.5 px-space-sm font-currency-sm text-currency-sm text-right text-on-surface">-90.00</td>
+<td class="py-2.5 px-space-sm text-right">
+<span class="px-1.5 py-0.5 rounded bg-surface-container-low text-on-surface-variant font-label-caps text-label-caps">PERSONAL</span>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-high/30 transition-colors">
+<td class="py-2.5 px-space-sm font-currency-sm text-currency-sm text-on-surface-variant">24 Oct</td>
+<td class="py-2.5 px-space-sm">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-container"></span>
+<span class="text-on-surface font-body-lg text-body-sm">Chai &amp; Bun Maska</span>
+</div>
+</td>
+<td class="py-2.5 px-space-sm">
+<span class="px-1.5 py-0.5 rounded-full bg-tertiary-container/15 text-tertiary font-label-caps text-label-caps">CASH (LEAK)</span>
+</td>
+<td class="py-2.5 px-space-sm font-currency-sm text-currency-sm text-right text-on-surface">-60.00</td>
+<td class="py-2.5 px-space-sm text-right">
+<span class="px-1.5 py-0.5 rounded bg-surface-container-low text-on-surface-variant font-label-caps text-label-caps">PERSONAL</span>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-high/30 transition-colors">
+<td class="py-2.5 px-space-sm font-currency-sm text-currency-sm text-on-surface-variant">23 Oct</td>
+<td class="py-2.5 px-space-sm">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="text-on-surface font-body-lg text-body-sm">Rahul Sharma</span>
+</div>
+</td>
+<td class="py-2.5 px-space-sm">
+<span class="px-1.5 py-0.5 rounded-full bg-primary/10 text-primary-fixed-dim font-label-caps text-label-caps">UPI (PHONEPE)</span>
+</td>
+<td class="py-2.5 px-space-sm font-currency-sm text-currency-sm text-right text-secondary font-bold">+350.00</td>
+<td class="py-2.5 px-space-sm text-right">
+<span class="px-1.5 py-0.5 rounded bg-secondary-container/20 text-secondary font-label-caps text-label-caps">SETTLED</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Preview Summary Footer Bar -->
+<div class="mt-space-sm pt-space-sm px-space-sm bg-surface-container-lowest rounded-lg flex flex-wrap items-center justify-between gap-y-1.5 text-on-surface">
+<div class="flex items-center gap-space-sm">
+<span class="font-label-caps text-label-caps text-on-surface-variant">128 ROWS PREVIEWED</span>
+<span class="w-1 h-1 rounded-full bg-outline"></span>
+<span class="font-currency-sm text-currency-sm text-tertiary">Outflow: ₹31,000.00</span>
+</div>
+<div class="font-currency-sm text-currency-sm text-secondary">
+          Inflow: ₹1,42,850.00
+        </div>
+</div>
+</div>
+</div>
+<!-- Primary & Quick Action CTAs -->
+<div class="flex flex-col gap-space-sm mt-space-xs">
+<!-- Primary Emerald Download CTA -->
+<button class="w-full h-12 rounded-full bg-secondary text-on-secondary font-headline-sm text-headline-sm flex items-center justify-center gap-space-sm shadow-md active:scale-[0.98] transition-all" id="main-download-btn" onclick="triggerDownload()" type="button">
+<span class="material-symbols-outlined text-[20px]">download</span>
+<span id="download-btn-text">Download Excel File (.xlsx) — 142 KB</span>
+</button>
+<!-- Secondary Quick Action Buttons -->
+<div class="grid grid-cols-2 gap-space-sm">
+<button class="h-11 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-headline-sm text-headline-sm flex items-center justify-center gap-space-xs transition-colors" onclick="quickShare('Google Drive')" type="button">
+<span class="material-symbols-outlined text-[18px] text-secondary">add_to_drive</span>
+<span class="text-body-sm">Save to G-Drive</span>
+</button>
+<button class="h-11 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-headline-sm text-headline-sm flex items-center justify-center gap-space-xs transition-colors" onclick="quickShare('Share Sheet')" type="button">
+<span class="material-symbols-outlined text-[18px] text-primary-fixed-dim">share</span>
+<span class="text-body-sm">Share via App</span>
+</button>
+</div>
+<!-- Security & Encryption Trust Banner -->
+<div class="flex items-center justify-center gap-1.5 py-space-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">lock</span>
+<span class="font-label-caps text-label-caps">END-TO-END 256-BIT ENCRYPTED LOCAL GENERATION</span>
+</div>
+</div>
+<!-- Toast Container for Micro-interaction feedback -->
+<div class="fixed bottom-6 left-1/2 -translate-x-1/2 px-space-lg py-2.5 rounded-full bg-surface-bright text-on-surface shadow-xl flex items-center gap-space-xs opacity-0 pointer-events-none transition-all duration-300 z-50" id="toast">
+<span class="material-symbols-outlined text-[18px] text-secondary">check_circle</span>
+<span class="font-headline-sm text-headline-sm text-[13px]" id="toast-text">Workbook saved!</span>
+</div>
+</div>
+<script>
+  let currentFormat = 'xlsx';
+
+  function selectFormat(btn, format) {
+    currentFormat = format;
+    const allButtons = document.querySelectorAll('.format-btn');
+    allButtons.forEach(b => {
+      b.classList.remove('bg-surface-container-high');
+      b.classList.add('bg-surface-container');
+      const radio = b.querySelector('.format-radio');
+      radio.className = 'format-radio w-5 h-5 rounded-full bg-surface-container-low flex items-center justify-center text-outline text-[14px]';
+      radio.innerHTML = '';
+    });
+
+    btn.classList.remove('bg-surface-container');
+    btn.classList.add('bg-surface-container-high');
+    const activeRadio = btn.querySelector('.format-radio');
+    activeRadio.className = 'format-radio w-5 h-5 rounded-full bg-secondary flex items-center justify-center text-on-secondary text-[14px]';
+    activeRadio.innerHTML = '<span class="material-symbols-outlined text-[14px] font-bold">check</span>';
+
+    const mainBtnText = document.getElementById('download-btn-text');
+    if (format === 'xlsx') {
+      mainBtnText.textContent = 'Download Excel File (.xlsx) — 142 KB';
+    } else if (format === 'csv') {
+      mainBtnText.textContent = 'Download Plain CSV (.csv) — 38 KB';
+    } else {
+      mainBtnText.textContent = 'Download Statement (.pdf) — 285 KB';
+    }
+  }
+
+  function setPeriod(pill, label, count) {
+    document.querySelectorAll('.period-pill').forEach(p => {
+      p.className = 'period-pill py-2.5 px-space-sm rounded-lg bg-surface-container text-on-surface-variant font-headline-sm text-headline-sm hover:text-on-surface flex items-center justify-center gap-space-xs';
+    });
+    pill.className = 'period-pill py-2.5 px-space-sm rounded-lg bg-primary-container text-on-primary-container font-headline-sm text-headline-sm flex items-center justify-center gap-space-xs';
+    document.getElementById('date-label').textContent = label;
+    document.getElementById('tx-count').textContent = count + ' TRANSACTIONS';
+  }
+
+  function updateSummary(cb) {
+    const totalChecked = document.querySelectorAll('input[type="checkbox"]:checked').length;
+    showToast(totalChecked + ' custom worksheets active');
+  }
+
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    const toastText = document.getElementById('toast-text');
+    toastText.textContent = msg;
+    toast.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-2');
+    toast.classList.add('opacity-100', 'translate-y-0');
+    setTimeout(() => {
+      toast.classList.remove('opacity-100', 'translate-y-0');
+      toast.classList.add('opacity-0', 'pointer-events-none');
+    }, 2200);
+  }
+
+  function triggerDownload() {
+    const btn = document.getElementById('main-download-btn');
+    const originalText = document.getElementById('download-btn-text').textContent;
+    btn.classList.add('opacity-75');
+    document.getElementById('download-btn-text').textContent = 'Compiling Multi-Sheet Ledger...';
+    setTimeout(() => {
+      btn.classList.remove('opacity-75');
+      document.getElementById('download-btn-text').textContent = originalText;
+      showToast('Downloaded ledger.' + currentFormat.toUpperCase());
+    }, 1200);
+  }
+
+  function quickShare(destination) {
+    showToast('Exporting to ' + destination + '...');
+  }
+</script></main></body></html>

@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100..900&family=Manrope:wght@100..900&family=Space+Grotesk:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"on-tertiary-fixed-variant":"#930013","on-surface-variant":"#c7c4d7","on-surface":"#dae2fd","surface":"#0b1326","on-primary":"#1000a9","secondary":"#4edea3","primary-fixed-dim":"#c0c1ff","primary":"#c0c1ff","surface-container-high":"#222a3d","on-error":"#690005","surface-container-highest":"#2d3449","inverse-on-surface":"#283044","on-primary-container":"#0d0096","on-tertiary-fixed":"#410004","outline-variant":"#464554","on-background":"#dae2fd","surface-bright":"#31394d","surface-variant":"#2d3449","inverse-surface":"#dae2fd","surface-tint":"#c0c1ff","on-tertiary-container":"#5c0008","tertiary-container":"#ff5451","inverse-primary":"#494bd6","primary-fixed":"#e1e0ff","outline":"#908fa0","on-primary-fixed-variant":"#2f2ebe","background":"#0b1326","secondary-container":"#00a572","tertiary-fixed-dim":"#ffb3ad","surface-container":"#171f33","on-tertiary":"#68000a","on-error-container":"#ffdad6","on-secondary-fixed-variant":"#005236","on-secondary":"#003824","on-secondary-container":"#00311f","surface-dim":"#0b1326","secondary-fixed":"#6ffbbe","tertiary":"#ffb3ad","on-primary-fixed":"#07006c","surface-container-lowest":"#060e20","on-secondary-fixed":"#002113","error":"#ffb4ab","tertiary-fixed":"#ffdad7","surface-container-low":"#131b2e","secondary-fixed-dim":"#4edea3","error-container":"#93000a","primary-container":"#8083ff"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-xs":"0.25rem","margin-desktop":"2.5rem","gutter-tablet":"1rem","gutter-desktop":"1.5rem","space-xl":"1.5rem","space-md":"0.75rem","margin":"1rem","space-sm":"0.5rem","margin-tablet":"1.5rem","gutter":"0.75rem","space-lg":"1rem"},"fontFamily":{"display-lg":["Space Grotesk"],"body-md":["Manrope"],"body-lg":["Manrope"],"body-sm":["Manrope"],"headline-lg":["Space Grotesk"],"display-lg-mobile":["Space Grotesk"],"headline-md":["Space Grotesk"],"currency-md":["JetBrains Mono"],"headline-sm":["Space Grotesk"],"label-sm":["Manrope"],"currency-lg":["JetBrains Mono"],"label-caps":["JetBrains Mono"],"currency-sm":["JetBrains Mono"]},"fontSize":{"display-lg":["36px",{"lineHeight":"44px","letterSpacing":"-0.03em","fontWeight":"700"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"500"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"headline-lg":["24px",{"lineHeight":"32px","letterSpacing":"-0.02em","fontWeight":"600"}],"display-lg-mobile":["28px",{"lineHeight":"36px","letterSpacing":"-0.02em","fontWeight":"700"}],"headline-md":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"currency-md":["18px",{"lineHeight":"24px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-sm":["16px",{"lineHeight":"24px","fontWeight":"600"}],"label-sm":["11px",{"lineHeight":"14px","fontWeight":"500"}],"currency-lg":["28px",{"lineHeight":"36px","letterSpacing":"-0.02em","fontWeight":"700"}],"label-caps":["11px",{"lineHeight":"14px","letterSpacing":"0.06em","fontWeight":"600"}],"currency-sm":["14px",{"lineHeight":"20px","fontWeight":"500"}]}}}};</script></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest z-50 flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.4)]"><div class="flex flex-col"><div class="h-16 px-space-lg flex items-center justify-between bg-surface-container-lowest"><div class="flex items-center gap-space-sm"><div class="w-9 h-9 rounded-xl bg-surface-container-high flex items-center justify-center shadow-inner"><span class="material-symbols-outlined text-secondary text-[22px]">waves</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight leading-none">Flows</span><span class="font-label-caps text-label-caps text-secondary-fixed-dim leading-none mt-1">FINTECH ENGINE</span></div></div><span class="px-space-sm py-0.5 rounded-full bg-surface-container-high text-primary font-label-caps text-label-caps border border-outline-variant/30">WEB VAULT</span></div><nav class="px-space-sm py-space-md flex flex-col gap-space-xs" data-active-classes="bg-surface-container-high text-primary font-headline-sm rounded-xl"><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md" data-path="dashboard-overview" href="#"><span class="material-symbols-outlined text-[20px]">grid_view</span><span>Dashboard / Overview</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md" data-path="transactions-ledger" href="#"><span class="material-symbols-outlined text-[20px]">receipt_long</span><span>Transactions Ledger</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md" data-path="cash-and-micro-leaks" href="#"><span class="material-symbols-outlined text-[20px]">water_drop</span><span>Cash & Micro-Leaks</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md" data-path="split-bills-and-groups" href="#"><span class="material-symbols-outlined text-[20px]">group</span><span>Split Bills & Groups</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md" data-path="receipt-ocr-vault" href="#"><span class="material-symbols-outlined text-[20px]">document_scanner</span><span>Receipt OCR Vault</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md" data-path="export-and-reports" href="#"><span class="material-symbols-outlined text-[20px]">table_chart</span><span>Export & Reports</span></a></nav></div><div class="p-space-md flex flex-col gap-space-sm bg-surface-container-low/40"><div class="p-space-md rounded-xl bg-surface-container-low flex flex-col gap-space-xs"><div class="flex items-center justify-between"><span class="font-label-caps text-label-caps text-on-surface-variant">CONNECTED ACCOUNT</span><span class="flex items-center gap-1 font-label-caps text-label-caps text-secondary"><span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>LIVE SYNC 2.0</span></div><div class="flex items-center gap-space-sm mt-1"><div class="w-7 h-7 rounded-full bg-surface-container-high flex items-center justify-center"><span class="material-symbols-outlined text-secondary-fixed text-[16px]">cloud_done</span></div><div class="flex flex-col min-w-0"><span class="font-body-md text-body-md text-on-surface font-semibold truncate leading-tight">Shaardul Kulkarni</span><span class="font-body-sm text-body-sm text-on-surface-variant truncate leading-tight">shaardul.k@gmail.com</span></div></div></div><nav class="flex flex-col" data-active-classes="bg-surface-container text-primary font-headline-sm rounded-xl"><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md" data-path="settings-and-security" href="#"><span class="material-symbols-outlined text-[20px]">shield</span><span>Settings & Security</span></a></nav></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface/80 backdrop-blur-xl z-40 flex items-center justify-between px-space-lg shadow-[0_1px_8px_rgba(0,0,0,0.25)]"><div class="flex-1 max-w-xl"><div class="relative flex items-center w-full"><span class="material-symbols-outlined absolute left-space-md text-on-surface-variant text-[20px]">search</span><input class="w-full h-10 pl-10 pr-24 rounded-xl bg-surface-container-low text-on-surface placeholder:text-outline font-body-md text-body-md border-0 focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Search transactions, VPAs, tags..." type="text"/><kbd class="absolute right-space-sm px-space-sm py-0.5 rounded bg-surface-container-high text-on-surface-variant font-label-caps text-label-caps pointer-events-none">⌘K</kbd></div></div><div class="flex items-center gap-space-md ml-space-lg"><div class="hidden xl:flex items-center gap-space-xs px-space-md py-1.5 rounded-full bg-surface-container-low"><span class="material-symbols-outlined text-secondary text-[16px]">lock</span><span class="font-label-caps text-label-caps text-on-surface-variant">Encrypted Cloud Sync • 24 Oct 2026</span></div><div class="flex items-center gap-space-sm"><button class="h-9 px-space-md rounded-full bg-secondary text-on-secondary font-headline-sm text-headline-sm flex items-center gap-1.5 hover:opacity-90 transition-opacity" type="button"><span class="material-symbols-outlined text-[18px]">add</span><span>Log Cash</span></button><button class="h-9 px-space-md rounded-full bg-surface-container-high text-on-surface font-body-md text-body-md flex items-center gap-1.5 hover:bg-surface-bright hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-secondary text-[18px]">file_download</span><span class="hidden lg:inline">Export to Excel (.xlsx)</span></button></div><div class="h-6 w-px bg-surface-container-high"></div><div class="flex items-center gap-space-sm"><button class="w-9 h-9 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors relative" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-secondary-fixed"></span></button><div class="flex items-center gap-space-xs cursor-pointer pl-1"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><span class="material-symbols-outlined text-on-surface-variant text-[18px]">expand_more</span></div></div></div></header><main class="w-full pt-16 bg-surface min-h-screen"><div class="flex flex-col w-full">
+<div class="px-margin-desktop py-space-xl flex flex-col gap-space-xl">
+<!-- Top Action & Context Header -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-sm mb-1">
+<span class="w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_rgba(78,222,163,0.8)]"></span>
+<span class="font-label-caps text-label-caps text-secondary uppercase tracking-widest">Personal Treasury Pulse</span>
+<span class="text-outline-variant font-label-caps text-label-caps">•</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Real-Time Aggregation (IST)</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight flex items-baseline gap-space-md">
+          October 2026 Cashflow
+          <span class="font-currency-sm text-currency-sm text-secondary-fixed-dim bg-surface-container-high px-space-sm py-0.5 rounded-full">Automated via UPI Webhook</span>
+</h1>
+</div>
+<div class="flex items-center gap-space-sm">
+<div class="bg-surface-container-low px-space-md py-2 rounded-xl flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[18px]">calendar_month</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Oct 1 – Oct 24, 2026</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px] cursor-pointer">arrow_drop_down</span>
+</div>
+<button class="h-10 px-space-lg rounded-full bg-secondary text-on-secondary font-headline-sm text-headline-sm flex items-center gap-space-xs hover:opacity-95 shadow-md transition-all" onclick="document.getElementById('quick-cash-modal').classList.remove('hidden')">
+<span class="material-symbols-outlined text-[20px]">add_circle</span>
+<span>Quick Cash Entry</span>
+</button>
+</div>
+</div>
+<!-- Section 1: Overview Bar & Stats Ribbon (Bento Ribbon) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-space-md">
+<!-- Card 1: Total Net Available Balance -->
+<div class="lg:col-span-4 bg-surface-container-low rounded-xl p-space-lg flex flex-col justify-between relative overflow-hidden group shadow-sm">
+<div class="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-primary/10 blur-2xl pointer-events-none group-hover:bg-primary/20 transition-all"></div>
+<div>
+<div class="flex items-center justify-between text-on-surface-variant mb-space-sm">
+<span class="font-label-caps text-label-caps tracking-wider uppercase">Total Net Liquidity</span>
+<span class="px-space-sm py-0.5 rounded-full bg-secondary/15 text-secondary font-label-caps text-label-caps flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>+2.4% vs lw
+            </span>
+</div>
+<div class="font-currency-lg text-currency-lg text-on-surface tracking-tight">₹1,42,850<span class="text-outline text-currency-md">.00</span></div>
+</div>
+<div class="mt-space-md pt-space-sm flex items-center justify-between text-body-sm text-on-surface-variant">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary">verified_user</span> 3 Banks Active
+          </span>
+<span class="text-secondary font-currency-sm text-currency-sm">₹3,400.00 today</span>
+</div>
+</div>
+<!-- Card 2: Bank & UPI Linked Details -->
+<div class="lg:col-span-3 bg-surface-container rounded-xl p-space-lg flex flex-col justify-between shadow-sm">
+<div>
+<div class="flex items-center justify-between text-on-surface-variant mb-space-xs">
+<span class="font-label-caps text-label-caps uppercase">UPI & Bank Stack</span>
+<span class="material-symbols-outlined text-primary text-[18px]">account_balance</span>
+</div>
+<div class="font-currency-md text-currency-md text-on-surface">₹1,38,350<span class="text-outline text-currency-sm">.00</span></div>
+</div>
+<div class="flex items-center gap-space-xs mt-space-md">
+<div class="flex-1 bg-surface-container-high rounded-lg p-2 flex flex-col">
+<span class="font-label-caps text-label-caps text-outline">HDFC</span>
+<span class="font-currency-sm text-currency-sm text-on-surface">₹84.2k</span>
+</div>
+<div class="flex-1 bg-surface-container-high rounded-lg p-2 flex flex-col">
+<span class="font-label-caps text-label-caps text-outline">ICICI</span>
+<span class="font-currency-sm text-currency-sm text-on-surface">₹41.1k</span>
+</div>
+<div class="flex-1 bg-surface-container-high rounded-lg p-2 flex flex-col">
+<span class="font-label-caps text-label-caps text-outline">PhonePe</span>
+<span class="font-currency-sm text-currency-sm text-on-surface">₹13.0k</span>
+</div>
+</div>
+</div>
+<!-- Card 3: Physical Cash in Hand -->
+<div class="lg:col-span-2 bg-surface-container-low rounded-xl p-space-lg flex flex-col justify-between shadow-sm">
+<div>
+<div class="flex items-center justify-between text-on-surface-variant mb-space-xs">
+<span class="font-label-caps text-label-caps uppercase">Cash In Hand</span>
+<span class="material-symbols-outlined text-secondary text-[18px]">payments</span>
+</div>
+<div class="font-currency-md text-currency-md text-on-surface">₹4,500<span class="text-outline text-currency-sm">.00</span></div>
+</div>
+<div class="flex items-center justify-between bg-surface-container px-space-sm py-1.5 rounded-lg mt-space-md">
+<span class="font-body-sm text-body-sm text-secondary flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>Reconciled
+          </span>
+<span class="font-label-caps text-label-caps text-outline">10:45 AM</span>
+</div>
+</div>
+<!-- Card 4: Budget Utilization -->
+<div class="lg:col-span-3 bg-surface-container-low rounded-xl p-space-lg flex flex-col justify-between shadow-sm">
+<div>
+<div class="flex items-center justify-between text-on-surface-variant mb-space-xs">
+<span class="font-label-caps text-label-caps uppercase">Monthly Budget</span>
+<span class="font-label-caps text-label-caps text-secondary bg-secondary/15 px-space-sm py-0.5 rounded">62% Used</span>
+</div>
+<div class="flex items-baseline justify-between mt-1">
+<span class="font-currency-md text-currency-md text-on-surface">₹31,000</span>
+<span class="font-currency-sm text-currency-sm text-outline">/ ₹50,000 cap</span>
+</div>
+</div>
+<div class="mt-space-md flex flex-col gap-1">
+<div class="w-full h-2 rounded-full bg-surface-container-highest overflow-hidden">
+<div class="h-full bg-secondary rounded-full" style="width: 62%;"></div>
+</div>
+<div class="flex justify-between font-body-sm text-body-sm text-on-surface-variant pt-1">
+<span>₹19,000 Left</span>
+<span>7 Days Remain</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Alert Strip: Micro-Leaks Detected -->
+<div class="rounded-xl bg-tertiary-container/15 p-space-md flex flex-col sm:flex-row sm:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-xl bg-tertiary-container/30 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[22px]">water_drop</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-sm">
+<span class="font-headline-sm text-headline-sm text-on-surface">Micro-Leak Engine Detected 24 Sub-₹200 Transactions</span>
+<span class="bg-tertiary-container text-on-tertiary font-label-caps text-label-caps px-2 py-0.5 rounded-full">CRITICAL DRIP</span>
+</div>
+<span class="font-body-md text-body-md text-on-surface-variant">
+            Aggregating to <strong class="text-tertiary font-currency-sm text-currency-sm">₹3,240.00</strong> this month. Primary culprit: <span class="text-on-surface font-semibold">Chai & Snacks at local tapris</span> (14 occurrences).
+          </span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm self-end sm:self-center">
+<button class="px-space-md py-1.5 rounded-full bg-surface-container-high text-on-surface font-body-sm text-body-sm hover:bg-surface-bright transition-colors">
+          Audit Leaks
+        </button>
+<button class="px-space-md py-1.5 rounded-full bg-tertiary-container text-on-tertiary font-body-sm text-body-sm font-semibold hover:opacity-90 transition-opacity">
+          Set ₹150 Daily Cap
+        </button>
+</div>
+</div>
+<!-- Section 2: Interactive Analytics & Category Breakdown (2 Column Layout) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg">
+<!-- Left Column: Spend Analytics, Donut & Flow Bars -->
+<div class="lg:col-span-7 bg-surface-container-low rounded-xl p-space-lg flex flex-col justify-between shadow-sm">
+<div class="flex items-center justify-between mb-space-md">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">Expense Trajectory & Category Distribution</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Breakdown across 128 recorded rails</span>
+</div>
+<div class="flex items-center gap-1 bg-surface-container p-1 rounded-xl">
+<button class="px-space-sm py-1 rounded-lg bg-surface-container-high text-primary font-label-caps text-label-caps">OCT '26</button>
+<button class="px-space-sm py-1 rounded-lg text-on-surface-variant hover:text-on-surface font-label-caps text-label-caps">SEP '26</button>
+</div>
+</div>
+<!-- Donut & Breakdown Visualization -->
+<div class="grid grid-cols-1 sm:grid-cols-12 gap-space-lg items-center my-space-md">
+<!-- Vector Donut Chart -->
+<div class="sm:col-span-5 flex flex-col items-center justify-center relative">
+<svg class="w-44 h-44 -rotate-90 transform" viewbox="0 0 100 100">
+<!-- Background Ring -->
+<circle class="text-surface-container-high" cx="50" cy="50" fill="transparent" r="40" stroke="currentColor" stroke-width="12"></circle>
+<!-- Food (42%) -->
+<circle class="text-secondary" cx="50" cy="50" fill="transparent" r="40" stroke="currentColor" stroke-dasharray="251.2" stroke-dashoffset="145.7" stroke-width="12"></circle>
+<!-- Transit (28%) -->
+<circle class="text-primary" cx="50" cy="50" fill="transparent" r="40" stroke="currentColor" stroke-dasharray="251.2" stroke-dashoffset="0" stroke-width="12" style="stroke-dashoffset: 75.36;"></circle>
+<!-- Shopping (18%) -->
+<circle class="text-primary-container" cx="50" cy="50" fill="transparent" r="40" stroke="currentColor" stroke-dasharray="251.2" stroke-dashoffset="205.9" stroke-width="12" style="stroke-dashoffset: 30.14;"></circle>
+<!-- Entertainment (12%) -->
+<circle class="text-tertiary-container" cx="50" cy="50" fill="transparent" r="40" stroke="currentColor" stroke-dasharray="251.2" stroke-dashoffset="221.0" stroke-width="12" style="stroke-dashoffset: 0;"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+<span class="font-currency-md text-currency-md text-on-surface">₹31.0k</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">TOTAL OUTFLOW</span>
+</div>
+</div>
+<!-- Category Legend with Dynamic Spend Gauges -->
+<div class="sm:col-span-7 flex flex-col gap-space-sm">
+<div class="bg-surface-container rounded-xl p-space-sm flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Food & Dining</span>
+</div>
+<span class="font-currency-sm text-currency-sm text-on-surface">₹13,020 (42%)</span>
+</div>
+<div class="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 42%"></div>
+</div>
+</div>
+<div class="bg-surface-container rounded-xl p-space-sm flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Transit & Commute</span>
+</div>
+<span class="font-currency-sm text-currency-sm text-on-surface">₹8,680 (28%)</span>
+</div>
+<div class="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 28%"></div>
+</div>
+</div>
+<div class="bg-surface-container rounded-xl p-space-sm flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Shopping & Quick Commerce</span>
+</div>
+<span class="font-currency-sm text-currency-sm text-on-surface">₹5,580 (18%)</span>
+</div>
+<div class="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary-container h-full rounded-full" style="width: 18%"></div>
+</div>
+</div>
+<div class="bg-surface-container rounded-xl p-space-sm flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="w-2.5 h-2.5 rounded-full bg-tertiary-container"></span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Entertainment & Subscriptions</span>
+</div>
+<span class="font-currency-sm text-currency-sm text-on-surface">₹3,720 (12%)</span>
+</div>
+<div class="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+<div class="bg-tertiary-container h-full rounded-full" style="width: 12%"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm flex items-center justify-between text-body-sm text-on-surface-variant">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-secondary">insights</span> Daily Run Rate: <strong class="text-on-surface font-currency-sm text-currency-sm">₹1,291.66 / day</strong>
+</span>
+<span class="text-primary font-headline-sm text-headline-sm cursor-pointer hover:underline">View 30-Day Trend Chart →</span>
+</div>
+</div>
+<!-- Right Column: Micro-Leaks & Cash Counter Reconciliation + AI Auto-Rules -->
+<div class="lg:col-span-5 flex flex-col gap-space-md">
+<!-- Physical Cash Vault Management Card -->
+<div class="bg-surface-container-low rounded-xl p-space-lg flex flex-col gap-space-md shadow-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[20px]">point_of_sale</span>
+</div>
+<div>
+<span class="font-headline-sm text-headline-sm text-on-surface block">Cash Reconciler & Vault</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Syncs with physical wallet balance</span>
+</div>
+</div>
+<button class="px-space-md py-1 rounded-full bg-surface-container-high text-secondary hover:bg-surface-bright font-label-caps text-label-caps flex items-center gap-1 transition-colors" onclick="document.getElementById('quick-cash-modal').classList.remove('hidden')">
+<span class="material-symbols-outlined text-[14px]">add</span> LOG CASH
+            </button>
+</div>
+<!-- Denomination Pill Row -->
+<div class="grid grid-cols-4 gap-2 bg-surface-container p-space-sm rounded-xl">
+<div class="flex flex-col items-center bg-surface-container-high p-1.5 rounded-lg">
+<span class="font-label-caps text-label-caps text-outline">₹500 x 6</span>
+<span class="font-currency-sm text-currency-sm text-on-surface">₹3,000</span>
+</div>
+<div class="flex flex-col items-center bg-surface-container-high p-1.5 rounded-lg">
+<span class="font-label-caps text-label-caps text-outline">₹200 x 4</span>
+<span class="font-currency-sm text-currency-sm text-on-surface">₹800</span>
+</div>
+<div class="flex flex-col items-center bg-surface-container-high p-1.5 rounded-lg">
+<span class="font-label-caps text-label-caps text-outline">₹100 x 5</span>
+<span class="font-currency-sm text-currency-sm text-on-surface">₹500</span>
+</div>
+<div class="flex flex-col items-center bg-surface-container-high p-1.5 rounded-lg">
+<span class="font-label-caps text-label-caps text-outline">Coins/Misc</span>
+<span class="font-currency-sm text-currency-sm text-on-surface">₹200</span>
+</div>
+</div>
+<div class="flex items-center justify-between text-body-sm">
+<span class="text-on-surface-variant">Last physical count:</span>
+<span class="text-on-surface font-semibold">Today, 10:45 AM (₹0 variance)</span>
+</div>
+</div>
+<!-- Auto-Rules & Suggested Classifications -->
+<div class="bg-surface-container-low rounded-xl p-space-lg flex flex-col gap-space-sm shadow-sm flex-1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">auto_awesome</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Flows AI Auto-Rules</span>
+</div>
+<span class="font-label-caps text-label-caps text-secondary bg-secondary/10 px-2 py-0.5 rounded">2 PENDING APPROVAL</span>
+</div>
+<div class="flex flex-col gap-space-xs mt-1">
+<div class="p-space-sm rounded-xl bg-surface-container flex items-center justify-between gap-space-sm">
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-on-surface font-medium">Tag all "Chai Stall" as Micro-Leak</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Trigger: Merchant contains 'chai' and amount < ₹100</span>
+</div>
+<div class="flex items-center gap-1">
+<button class="w-7 h-7 rounded-lg bg-surface-container-high text-secondary flex items-center justify-center hover:bg-secondary hover:text-on-secondary transition-colors" title="Apply Rule">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</button>
+<button class="w-7 h-7 rounded-lg bg-surface-container-high text-outline flex items-center justify-center hover:bg-error-container hover:text-error transition-colors" title="Dismiss">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+</div>
+<div class="p-space-sm rounded-xl bg-surface-container flex items-center justify-between gap-space-sm">
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-on-surface font-medium">Auto-categorize "swiggy@icici" to Food</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Matched 18 transactions this month</span>
+</div>
+<div class="flex items-center gap-1">
+<button class="w-7 h-7 rounded-lg bg-surface-container-high text-secondary flex items-center justify-center hover:bg-secondary hover:text-on-secondary transition-colors" title="Apply Rule">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</button>
+<button class="w-7 h-7 rounded-lg bg-surface-container-high text-outline flex items-center justify-center hover:bg-error-container hover:text-error transition-colors" title="Dismiss">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 3: Transactions Ledger (Rich Master Data Table) -->
+<div class="bg-surface-container-low rounded-xl shadow-md overflow-hidden flex flex-col">
+<!-- Table Filter Bar & Controls -->
+<div class="p-space-lg flex flex-col gap-space-md bg-surface-container-low">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-sm">
+<span class="font-headline-md text-headline-md text-on-surface tracking-tight">Master Ledger</span>
+<span class="px-space-sm py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-caps text-label-caps">128 Entries</span>
+</div>
+<div class="flex flex-wrap items-center gap-space-sm">
+<!-- Search Inside Ledger -->
+<div class="relative flex items-center min-w-[260px]">
+<span class="material-symbols-outlined absolute left-space-md text-outline text-[18px]">search</span>
+<input class="w-full h-9 pl-9 pr-3 rounded-full bg-surface-container text-on-surface placeholder:text-outline font-body-sm text-body-sm focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Filter merchant, note or VPA..." type="text"/>
+</div>
+<!-- Month Dropdown -->
+<div class="h-9 px-space-md rounded-full bg-surface-container text-on-surface font-body-sm text-body-sm flex items-center gap-1 cursor-pointer">
+<span>October 2026</span>
+<span class="material-symbols-outlined text-[18px]">expand_more</span>
+</div>
+<!-- XLSX Export Trigger -->
+<button class="h-9 px-space-md rounded-full bg-primary text-on-primary font-headline-sm text-headline-sm flex items-center gap-1.5 hover:opacity-90 shadow-sm transition-opacity">
+<span class="material-symbols-outlined text-[18px]">table_view</span>
+<span>Export to Excel (.xlsx)</span>
+</button>
+</div>
+</div>
+<!-- Filter Chips Row -->
+<div class="flex flex-wrap items-center gap-space-xs">
+<button class="px-space-md py-1 rounded-full bg-primary text-on-primary font-headline-sm text-headline-sm">All (128)</button>
+<button class="px-space-md py-1 rounded-full bg-surface-container text-on-surface-variant hover:text-on-surface font-body-sm text-body-sm transition-colors flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-primary"></span>UPI Rails (94)
+          </button>
+<button class="px-space-md py-1 rounded-full bg-surface-container text-on-surface-variant hover:text-on-surface font-body-sm text-body-sm transition-colors flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>Cash Only (26)
+          </button>
+<button class="px-space-md py-1 rounded-full bg-surface-container text-on-surface-variant hover:text-on-surface font-body-sm text-body-sm transition-colors flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>Splits Pending (8)
+          </button>
+<button class="px-space-md py-1 rounded-full bg-surface-container text-on-surface-variant hover:text-on-surface font-body-sm text-body-sm transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-secondary-fixed">receipt</span> OCR Receipts Attached (42)
+          </button>
+</div>
+</div>
+<!-- Ledger Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant font-label-caps text-label-caps">
+<th class="py-space-md px-space-lg">DATE / TIME</th>
+<th class="py-space-md px-space-md">MERCHANT & MEMO</th>
+<th class="py-space-md px-space-md">CATEGORY</th>
+<th class="py-space-md px-space-md">PAYMENT RAIL / VPA</th>
+<th class="py-space-md px-space-md">SPLIT STATUS</th>
+<th class="py-space-md px-space-md">RECEIPT OCR</th>
+<th class="py-space-md px-space-lg text-right">AMOUNT (INR)</th>
+</tr>
+</thead>
+<tbody class="divide-y-0 text-body-md text-body-md text-on-surface">
+<!-- Row 1: Swiggy Dinner -->
+<tr class="hover:bg-surface-container/60 transition-colors">
+<td class="py-space-md px-space-lg font-label-caps text-label-caps text-on-surface-variant whitespace-nowrap">
+<div class="text-on-surface font-medium">24 Oct, 2026</div>
+<div class="text-[10px] text-outline">09:15 PM</div>
+</td>
+<td class="py-space-md px-space-md min-w-[200px]">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-full bg-surface-container-high flex items-center justify-center text-primary flex-shrink-0">
+<span class="material-symbols-outlined text-[18px]">restaurant</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-headline-sm text-on-surface truncate">Swiggy Dinner</span>
+<span class="font-body-sm text-body-sm text-outline truncate">Weekend Team Meal • Indiranagar</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="px-space-sm py-1 rounded-md bg-secondary/10 text-secondary font-body-sm text-body-sm font-semibold">Food & Dining</span>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-primary">UPI (HDFC Bank)</span>
+<span class="font-label-caps text-label-caps text-outline text-[10px]">swiggy@icici</span>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="flex items-center gap-space-xs">
+<span class="px-space-sm py-0.5 rounded-full bg-tertiary-container/20 text-tertiary font-label-caps text-label-caps">
+                    4 Splits (3 Unpaid)
+                  </span>
+<button class="w-7 h-7 rounded-full bg-surface-container-high text-secondary flex items-center justify-center hover:opacity-80 transition-opacity" title="Nudge via WhatsApp">
+<span class="material-symbols-outlined text-[14px]">chat</span>
+</button>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="flex items-center gap-1 font-label-caps text-label-caps text-secondary">
+<span class="material-symbols-outlined text-[16px]">check_circle</span> Attached (OCR 99%)
+                </span>
+</td>
+<td class="py-space-md px-space-lg text-right whitespace-nowrap">
+<span class="font-currency-md text-currency-md text-error">- ₹1,200.00</span>
+</td>
+</tr>
+<!-- Row 2: Local Auto Fare -->
+<tr class="hover:bg-surface-container/60 transition-colors bg-surface-container/20">
+<td class="py-space-md px-space-lg font-label-caps text-label-caps text-on-surface-variant whitespace-nowrap">
+<div class="text-on-surface font-medium">24 Oct, 2026</div>
+<div class="text-[10px] text-outline">06:40 PM</div>
+</td>
+<td class="py-space-md px-space-md min-w-[200px]">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-full bg-surface-container-high flex items-center justify-center text-secondary flex-shrink-0">
+<span class="material-symbols-outlined text-[18px]">local_taxi</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-headline-sm text-on-surface truncate">Local Auto Fare</span>
+<span class="font-body-sm text-body-sm text-outline truncate">Commute to HSR Layout Sector 4</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="px-space-sm py-1 rounded-md bg-primary/10 text-primary font-body-sm text-body-sm font-semibold">Transit</span>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-secondary">Cash Payment</span>
+<span class="font-label-caps text-label-caps text-outline text-[10px]">Physical Wallet</span>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="text-outline font-label-caps text-label-caps">Solo (No Split)</span>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="text-outline font-label-caps text-label-caps flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">remove</span> No Receipt
+                </span>
+</td>
+<td class="py-space-md px-space-lg text-right whitespace-nowrap">
+<span class="font-currency-md text-currency-md text-error">- ₹90.00</span>
+</td>
+</tr>
+<!-- Row 3: Tapri Chai & Bun Maska (Micro-Leak Tagged) -->
+<tr class="hover:bg-surface-container/60 transition-colors">
+<td class="py-space-md px-space-lg font-label-caps text-label-caps text-on-surface-variant whitespace-nowrap">
+<div class="text-on-surface font-medium">24 Oct, 2026</div>
+<div class="text-[10px] text-outline">04:15 PM</div>
+</td>
+<td class="py-space-md px-space-md min-w-[200px]">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-full bg-tertiary-container/30 flex items-center justify-center text-tertiary flex-shrink-0">
+<span class="material-symbols-outlined text-[18px]">coffee</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1">
+<span class="font-headline-sm text-headline-sm text-on-surface truncate">Tapri Chai & Bun Maska</span>
+<span class="bg-tertiary-container/30 text-tertiary font-label-caps text-[10px] px-1 rounded">LEAK</span>
+</div>
+<span class="font-body-sm text-body-sm text-outline truncate">Corner Chai Stall • Evening Break</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="px-space-sm py-1 rounded-md bg-secondary/10 text-secondary font-body-sm text-body-sm font-semibold">Food & Dining</span>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-secondary">Cash Counter</span>
+<span class="font-label-caps text-label-caps text-outline text-[10px]">Auto-Leak Monitored</span>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="text-outline font-label-caps text-label-caps">Solo</span>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="text-outline font-label-caps text-label-caps flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">remove</span> No Receipt
+                </span>
+</td>
+<td class="py-space-md px-space-lg text-right whitespace-nowrap">
+<span class="font-currency-md text-currency-md text-error">- ₹60.00</span>
+</td>
+</tr>
+<!-- Row 4: Reimbursement from Rahul (Inflow Credit) -->
+<tr class="hover:bg-surface-container/60 transition-colors bg-secondary/5">
+<td class="py-space-md px-space-lg font-label-caps text-label-caps text-on-surface-variant whitespace-nowrap">
+<div class="text-on-surface font-medium">24 Oct, 2026</div>
+<div class="text-[10px] text-outline">02:30 PM</div>
+</td>
+<td class="py-space-md px-space-md min-w-[200px]">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-full bg-secondary/20 flex items-center justify-center text-secondary flex-shrink-0">
+<span class="material-symbols-outlined text-[18px]">call_received</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-headline-sm text-on-surface truncate">Reimbursement from Rahul</span>
+<span class="font-body-sm text-body-sm text-secondary truncate">Settlement: Swiggy Share (Indiranagar)</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="px-space-sm py-1 rounded-md bg-surface-container-high text-on-surface-variant font-body-sm text-body-sm font-semibold">Transfer / Reimbursement</span>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-secondary-fixed">UPI (PhonePe)</span>
+<span class="font-label-caps text-label-caps text-outline text-[10px]">rahul.k@okaxis</span>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="px-space-sm py-0.5 rounded-full bg-secondary/20 text-secondary font-label-caps text-label-caps flex items-center gap-1 w-max">
+<span class="material-symbols-outlined text-[12px]">done_all</span> Settled
+                </span>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="font-label-caps text-label-caps text-outline">System Match</span>
+</td>
+<td class="py-space-md px-space-lg text-right whitespace-nowrap">
+<span class="font-currency-md text-currency-md text-secondary font-bold">+ ₹350.00</span>
+</td>
+</tr>
+<!-- Row 5: Zepto Quick Commerce -->
+<tr class="hover:bg-surface-container/60 transition-colors">
+<td class="py-space-md px-space-lg font-label-caps text-label-caps text-on-surface-variant whitespace-nowrap">
+<div class="text-on-surface font-medium">23 Oct, 2026</div>
+<div class="text-[10px] text-outline">08:12 AM</div>
+</td>
+<td class="py-space-md px-space-md min-w-[200px]">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-full bg-surface-container-high flex items-center justify-center text-primary-container flex-shrink-0">
+<span class="material-symbols-outlined text-[18px]">shopping_basket</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-headline-sm text-on-surface truncate">Zepto Quick Commerce</span>
+<span class="font-body-sm text-body-sm text-outline truncate">Breakfast Essentials, Milk & Sourdough</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="px-space-sm py-1 rounded-md bg-primary-container/20 text-primary-fixed-dim font-body-sm text-body-sm font-semibold">Groceries</span>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-primary">UPI (GPay Axis)</span>
+<span class="font-label-caps text-label-caps text-outline text-[10px]">zepto@axisbank</span>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="text-outline font-label-caps text-label-caps">Solo</span>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="flex items-center gap-1 font-label-caps text-label-caps text-secondary">
+<span class="material-symbols-outlined text-[16px]">check_circle</span> Attached (E-Bill)
+                </span>
+</td>
+<td class="py-space-md px-space-lg text-right whitespace-nowrap">
+<span class="font-currency-md text-currency-md text-error">- ₹310.00</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Section 4: Excel Export & Cloud Sync Quick Bar (Bottom of Ledger) -->
+<div class="p-space-lg bg-surface-container-high flex flex-col md:flex-row items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-xl bg-secondary-container/30 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[24px]">description</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">128 Transactions in October 2026 • Ready for Instant .XLSX Export</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Includes formulas, VPA metadata, split settlement tags, and tax receipts.</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm w-full md:w-auto">
+<button class="flex-1 md:flex-initial h-10 px-space-lg rounded-full bg-surface-container text-on-surface font-body-md text-body-md hover:bg-surface-bright transition-colors flex items-center justify-center gap-1.5">
+<span class="material-symbols-outlined text-[18px]">sync</span>
+<span>Cloud Re-Index</span>
+</button>
+<button class="flex-1 md:flex-initial h-10 px-space-lg rounded-full bg-secondary text-on-secondary font-headline-sm text-headline-sm hover:opacity-95 shadow-md transition-all flex items-center justify-center gap-1.5">
+<span class="material-symbols-outlined text-[18px]">download</span>
+<span>Download Ledger (.xlsx)</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Interactive Quick Cash Modal (Controlled via Inline Vanilla JS) -->
+<div class="hidden fixed inset-0 z-50 bg-surface-container-lowest/80 backdrop-blur-sm flex items-center justify-center p-space-md" id="quick-cash-modal">
+<div class="w-full max-w-md bg-surface-container-low rounded-xl p-space-xl flex flex-col gap-space-lg shadow-xl relative animate-in fade-in zoom-in-95 duration-150">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-full bg-secondary/20 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[20px]">payments</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Log Quick Cash Entry</h3>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Wallet Balance: ₹4,500.00</span>
+</div>
+</div>
+<button class="w-8 h-8 rounded-full bg-surface-container text-on-surface-variant flex items-center justify-center hover:bg-surface-bright hover:text-on-surface" onclick="document.getElementById('quick-cash-modal').classList.add('hidden')">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<div class="flex flex-col gap-space-md">
+<div class="flex flex-col gap-1">
+<label class="font-label-caps text-label-caps text-on-surface-variant">AMOUNT (INR)</label>
+<div class="relative flex items-center">
+<span class="absolute left-space-md font-currency-md text-currency-md text-on-surface">₹</span>
+<input class="w-full h-12 pl-10 pr-space-md rounded-xl bg-surface-container text-on-surface font-currency-md text-currency-md focus:outline-none focus:ring-1 focus:ring-secondary" id="quick-amount-input" placeholder="0.00" type="number"/>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-caps text-label-caps text-on-surface-variant">MERCHANT OR MEMO</label>
+<input class="w-full h-11 px-space-md rounded-xl bg-surface-container text-on-surface font-body-md text-body-md focus:outline-none focus:ring-1 focus:ring-secondary" placeholder="e.g., Tapri Chai, Auto Fare, Vegetable vendor" type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-space-sm">
+<div class="flex flex-col gap-1">
+<label class="font-label-caps text-label-caps text-on-surface-variant">CATEGORY</label>
+<select class="h-10 px-space-sm rounded-xl bg-surface-container text-on-surface font-body-sm text-body-sm focus:outline-none focus:ring-1 focus:ring-secondary">
+<option>Food & Dining</option>
+<option>Transit & Commute</option>
+<option>Groceries</option>
+<option>Other / Cash Misc</option>
+</select>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-caps text-label-caps text-on-surface-variant">LEAK MONITORED?</label>
+<label class="h-10 px-space-sm rounded-xl bg-surface-container flex items-center gap-space-sm cursor-pointer">
+<input checked="" class="rounded accent-secondary" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface">Track as Leak</span>
+</label>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-space-sm mt-space-sm">
+<button class="flex-1 h-11 rounded-full bg-surface-container text-on-surface font-headline-sm text-headline-sm hover:bg-surface-bright transition-colors" onclick="document.getElementById('quick-cash-modal').classList.add('hidden')">
+          Cancel
+        </button>
+<button class="flex-1 h-11 rounded-full bg-secondary text-on-secondary font-headline-sm text-headline-sm hover:opacity-90 shadow-md transition-opacity" onclick="document.getElementById('quick-cash-modal').classList.add('hidden')">
+          Save & Deduct
+        </button>
+</div>
+</div>
+</div>
+<script>
+    // Keyboard shortcut helper for closing modal
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        const modal = document.getElementById('quick-cash-modal');
+        if (modal) modal.classList.add('hidden');
+      }
+    });
+  </script>
+</div></main></div></body></html>
