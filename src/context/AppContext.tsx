@@ -11,6 +11,7 @@ import {
 import { INITIAL_EXPENSES, INITIAL_GROUPS, INITIAL_SETTLEMENTS, INITIAL_USERS } from '../data/mockData';
 import { calculateEqualSplit, simplifyDebts, toPaisa, fromPaisa } from '../utils/math';
 import { purgeLegacyBogusData } from '../utils/auth';
+import { getSupabaseClient, signOutSupabase } from '../utils/supabase';
 
 interface AppContextType {
   currentUser: User;
@@ -287,7 +288,48 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const logout = () => {
     setIsAuthenticated(false);
     localStorage.setItem(STORAGE_KEYS.AUTH, JSON.stringify(false));
+    signOutSupabase();
   };
+
+  // Listen to Supabase OAuth Google Sign-In redirect and session
+  useEffect(() => {
+    const client = getSupabaseClient();
+    if (!client) return;
+
+    client.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        const u = session.user;
+        const name =
+          u.user_metadata?.full_name ||
+          u.user_metadata?.name ||
+          (u.email ? u.email.split('@')[0] : 'Google User');
+        const avatar = u.user_metadata?.avatar_url || u.user_metadata?.picture;
+        if (u.email) {
+          loginWithGoogle({ email: u.email, name, avatar });
+        }
+      }
+    });
+
+    const {
+      data: { subscription },
+    } = client.auth.onAuthStateChange((event, session) => {
+      if (session?.user && (event === 'SIGNED_IN' || event === 'USER_UPDATED')) {
+        const u = session.user;
+        const name =
+          u.user_metadata?.full_name ||
+          u.user_metadata?.name ||
+          (u.email ? u.email.split('@')[0] : 'Google User');
+        const avatar = u.user_metadata?.avatar_url || u.user_metadata?.picture;
+        if (u.email) {
+          loginWithGoogle({ email: u.email, name, avatar });
+        }
+      }
+    });
+
+    return () => {
+      subscription?.unsubscribe();
+    };
+  }, []);
 
   // Sync to localStorage
   useEffect(() => {

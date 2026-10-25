@@ -6,12 +6,14 @@ import {
   registerAccount,
   verifyAccountPassword,
   decodeGoogleJwt,
-  getGoogleClientId,
-  setGoogleClientId,
-  registerOrLoginGoogleUser,
   getStoredAccounts,
   StoredAccount,
 } from '../../utils/auth';
+import {
+  getSupabaseConfig,
+  setSupabaseConfig,
+  signInWithGoogleOAuth,
+} from '../../utils/supabase';
 
 declare global {
   interface Window {
@@ -44,11 +46,11 @@ export const SignInView: React.FC = () => {
   // QR Pairing Modal
   const [showQrModal, setShowQrModal] = useState(false);
 
-  // Google OAuth verification modal
-  const [showGoogleModal, setShowGoogleModal] = useState(false);
-  const [clientIdInput, setClientIdInput] = useState(getGoogleClientId());
-  const [googleManualEmail, setGoogleManualEmail] = useState('');
-  const [googleManualName, setGoogleManualName] = useState('');
+  // Supabase Google OAuth Modal
+  const [showSupabaseModal, setShowSupabaseModal] = useState(false);
+  const initialSupabaseConfig = getSupabaseConfig();
+  const [supabaseUrlInput, setSupabaseUrlInput] = useState(initialSupabaseConfig.url);
+  const [supabaseAnonKeyInput, setSupabaseAnonKeyInput] = useState(initialSupabaseConfig.anonKey);
 
   // 6-digit Vault Security OTP Verification Modal
   const [showOtpModal, setShowOtpModal] = useState(false);
@@ -70,126 +72,51 @@ export const SignInView: React.FC = () => {
     }
   }, []);
 
-  // Initialize Google Identity Services (GSI) if available
-  useEffect(() => {
-    const currentClientId = getGoogleClientId();
-    if (window.google?.accounts?.id && currentClientId) {
-      try {
-        window.google.accounts.id.initialize({
-          client_id: currentClientId,
-          callback: handleGoogleCredentialResponse,
-          auto_select: false,
-          cancel_on_tap_outside: true,
-        });
-
-        const btnContainer = document.getElementById('gsiButtonContainer');
-        if (btnContainer) {
-          window.google.accounts.id.renderButton(btnContainer, {
-            type: 'standard',
-            theme: 'filled_black',
-            size: 'large',
-            shape: 'pill',
-            text: 'continue_with',
-            width: btnContainer.offsetWidth || 300,
-          });
-        }
-      } catch (err) {
-        console.warn('Google GSI initialization notice:', err);
-      }
+  // Handle native Google OAuth via Supabase
+  const handleGoogleClick = async () => {
+    const config = getSupabaseConfig();
+    if (!config.isConfigured) {
+      setShowSupabaseModal(true);
+      return;
     }
-  }, []);
 
-  const handleGoogleCredentialResponse = (response: any) => {
     setIsSubmitting(true);
-    if (!response?.credential) {
-      setIsSubmitting(false);
-      showToast('Google did not return a valid credential token.', 'error');
-      return;
-    }
+    showToast('Connecting to accounts.google.com...', 'info');
+    const res = await signInWithGoogleOAuth();
+    setIsSubmitting(false);
 
-    const payload = decodeGoogleJwt(response.credential);
-    if (!payload || !payload.email) {
-      setIsSubmitting(false);
-      showToast('Unable to parse Google authentication token.', 'error');
-      return;
-    }
-
-    const profile = {
-      email: payload.email,
-      name: payload.name || payload.given_name || 'Google User',
-      avatar: payload.picture,
-    };
-
-    if (authMode === 'signup') {
-      // Link Google Account to the registration form
-      setGoogleConnectedUser(profile);
-      if (!fullName) setFullName(profile.name);
-      if (!email) setEmail(profile.email);
-      setIsSubmitting(false);
-      setShowGoogleModal(false);
-      showToast(`Google Account verified: ${profile.email}!`, 'success');
-    } else {
-      // Register or login Google User directly
-      registerOrLoginGoogleUser(profile);
-      loginWithGoogle(profile);
-      setIsSubmitting(false);
-      setActiveTab('dashboard');
-      showToast(`Verified via Google as ${profile.email}!`, 'success');
+    if (!res.success) {
+      showToast(res.error || 'Failed to open Google Sign-In.', 'error');
+      setShowSupabaseModal(true);
     }
   };
 
-  const handleSaveGoogleClientId = () => {
-    setGoogleClientId(clientIdInput);
-    if (window.google?.accounts?.id && clientIdInput.trim()) {
-      try {
-        window.google.accounts.id.initialize({
-          client_id: clientIdInput.trim(),
-          callback: handleGoogleCredentialResponse,
-        });
-      } catch (err) {
-        console.warn('Google GSI re-initialization error:', err);
-      }
-    }
-    setShowGoogleModal(false);
-    showToast('Google OAuth Client ID saved!', 'success');
-  };
-
-  // Connect & Verify Google Account
-  const handleVerifyGoogleAccount = (e: React.FormEvent) => {
+  const handleSaveSupabaseAndSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    const gEmail = googleManualEmail.trim().toLowerCase();
-    const gName = googleManualName.trim() || fullName.trim() || gEmail.split('@')[0];
+    const url = supabaseUrlInput.trim();
+    const key = supabaseAnonKeyInput.trim();
 
-    if (!validateEmail(gEmail)) {
-      showToast('Please enter a valid Google Account email address.', 'error');
+    if (!url.startsWith('https://') || !url.includes('.supabase.co')) {
+      showToast('Please enter a valid Supabase URL (e.g. https://xyz.supabase.co)', 'error');
+      return;
+    }
+    if (key.length < 20) {
+      showToast('Please enter a valid Supabase Anon Public Key', 'error');
       return;
     }
 
+    setSupabaseConfig(url, key);
+    setShowSupabaseModal(false);
+    showToast('Supabase configured! Redirecting to Google...', 'info');
+
     setIsSubmitting(true);
-    const profile = {
-      email: gEmail,
-      name: gName,
-      avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(gName)}`,
-    };
+    const res = await signInWithGoogleOAuth();
+    setIsSubmitting(false);
 
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setShowGoogleModal(false);
-
-      if (authMode === 'signup') {
-        // Link Google account to sign up state
-        setGoogleConnectedUser(profile);
-        if (!email) setEmail(gEmail);
-        if (!fullName) setFullName(gName);
-        showToast(`Google Account connected: ${gEmail}`, 'success');
-      } else {
-        // Sign In directly via verified Google Account
-        registerOrLoginGoogleUser(profile);
-        loginWithGoogle(profile);
-        setActiveTab('dashboard');
-        showToast(`Signed in with verified Google Account: ${gEmail}`, 'success');
-      }
-    }, 400);
+    if (!res.success) {
+      showToast(res.error || 'Google OAuth failed. Ensure Google provider is enabled in Supabase.', 'error');
+      setShowSupabaseModal(true);
+    }
   };
 
   // Submit Handler for Sign In / Create Account
@@ -260,15 +187,6 @@ export const SignInView: React.FC = () => {
         return;
       }
 
-      // Require or prompt Google connection if not yet connected
-      if (!googleConnectedUser) {
-        setGoogleManualEmail(trimmedEmail);
-        setGoogleManualName(fullName.trim());
-        setShowGoogleModal(true);
-        showToast('Please connect your Google Account to complete registration.', 'info');
-        return;
-      }
-
       // Generate realistic 6-digit Vault Security OTP
       const code = Math.floor(100000 + Math.random() * 900000).toString();
       setExpectedOtp(code);
@@ -322,7 +240,7 @@ export const SignInView: React.FC = () => {
       return;
     }
 
-    // Register the account permanently with Google verification linked
+    // Register the account permanently with Google verification linked if available
     const regRes = registerAccount(fullName, email, password, {
       googleConnected: !!googleConnectedUser,
       googleEmail: googleConnectedUser?.email || email,
@@ -338,29 +256,6 @@ export const SignInView: React.FC = () => {
     login(email.trim().toLowerCase(), fullName.trim());
     setActiveTab('dashboard');
     showToast(`Vault Security verified! Welcome to Flows, ${fullName.trim()}!`, 'success');
-  };
-
-  const handleGoogleClick = () => {
-    const cid = getGoogleClientId();
-    if (window.google?.accounts?.id && cid) {
-      try {
-        window.google.accounts.id.prompt((notification: any) => {
-          if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-            setGoogleManualEmail(email || '');
-            setGoogleManualName(fullName || '');
-            setShowGoogleModal(true);
-          }
-        });
-      } catch {
-        setGoogleManualEmail(email || '');
-        setGoogleManualName(fullName || '');
-        setShowGoogleModal(true);
-      }
-    } else {
-      setGoogleManualEmail(email || '');
-      setGoogleManualName(fullName || '');
-      setShowGoogleModal(true);
-    }
   };
 
   return (
@@ -622,23 +517,36 @@ export const SignInView: React.FC = () => {
                         <span>Connect Google Account</span>
                       </span>
                       <span className="px-2 py-0.5 rounded-full bg-primary/15 text-primary font-mono text-[9px] font-bold">
-                        Verification Required
+                        Native OAuth
                       </span>
                     </div>
                     <p className="text-[11px] text-on-surface-variant leading-relaxed">
-                      Link your authentic Google account to enable cryptographic identity and multi-device sync.
+                      Connect with your real Google account via official accounts.google.com OAuth popup.
                     </p>
                     <button
                       type="button"
-                      onClick={() => {
-                        setGoogleManualEmail(email || '');
-                        setGoogleManualName(fullName || '');
-                        setShowGoogleModal(true);
-                      }}
+                      onClick={handleGoogleClick}
                       className="w-full h-10 bg-on-surface text-surface rounded-xl font-headline-sm text-xs font-bold flex items-center justify-center gap-2 hover:bg-inverse-surface active:scale-95 transition-all shadow"
                     >
-                      <span className="material-symbols-outlined text-[17px]">link</span>
-                      <span>Connect with Google</span>
+                      <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                        <path
+                          d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                          fill="#4285F4"
+                        />
+                        <path
+                          d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                          fill="#34A853"
+                        />
+                        <path
+                          d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                          fill="#FBBC05"
+                        />
+                        <path
+                          d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                          fill="#EA4335"
+                        />
+                      </svg>
+                      <span>Sign In with Google</span>
                     </button>
                   </div>
                 )}
@@ -702,14 +610,12 @@ export const SignInView: React.FC = () => {
             <div className="flex-grow border-t border-outline-variant/40" />
           </div>
 
-          {/* 1-Tap Google Sign-In Button */}
+          {/* Official Google Sign-In Button */}
           <div className="flex flex-col gap-2.5">
-            {/* Google GSI Official Button Container (if initialized) */}
-            <div id="gsiButtonContainer" className="w-full flex justify-center empty:hidden" />
-
             <button
               type="button"
               onClick={handleGoogleClick}
+              disabled={isSubmitting}
               className="w-full h-12 bg-on-surface text-surface font-headline-sm text-sm font-bold rounded-full flex items-center justify-between px-4 sm:px-5 shadow-lg active:scale-[0.98] transition-all hover:bg-inverse-surface"
             >
               <div className="flex items-center gap-3 min-w-0">
@@ -734,11 +640,21 @@ export const SignInView: React.FC = () => {
                 <span className="tracking-tight font-semibold truncate">Continue with Google</span>
               </div>
               <div className="flex items-center gap-1 shrink-0">
-                <span className="text-[10px] font-mono text-surface/70 hidden sm:inline">Google Auth</span>
+                <span className="text-[10px] font-mono text-surface/70 hidden sm:inline">Google OAuth</span>
                 <span className="material-symbols-outlined text-surface text-[20px]">
                   chevron_right
                 </span>
               </div>
+            </button>
+
+            {/* Supabase OAuth Settings button */}
+            <button
+              type="button"
+              onClick={() => setShowSupabaseModal(true)}
+              className="w-full h-10 bg-surface-container text-on-surface font-mono text-xs font-semibold rounded-full flex items-center justify-center gap-2 hover:bg-surface-container-high transition-colors border border-outline-variant/30 px-3"
+            >
+              <span className="material-symbols-outlined text-primary text-[17px]">settings</span>
+              <span className="truncate">Supabase Google OAuth Settings</span>
             </button>
 
             {/* QR Sync / Pair with Web Device button */}
@@ -894,8 +810,8 @@ export const SignInView: React.FC = () => {
         </div>
       )}
 
-      {/* GOOGLE ACCOUNT CONNECTION & VERIFICATION MODAL */}
-      {showGoogleModal && (
+      {/* SUPABASE GOOGLE OAUTH CONFIGURATION MODAL */}
+      {showSupabaseModal && (
         <div className="fixed inset-0 z-50 bg-surface-container-lowest/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200">
           <div className="bg-surface-container-high rounded-3xl p-5 sm:p-6 max-w-md w-full border border-outline-variant/30 flex flex-col space-y-4 shadow-2xl">
             <div className="flex items-center justify-between border-b border-outline-variant/20 pb-3">
@@ -922,13 +838,13 @@ export const SignInView: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="font-headline-sm text-sm font-bold text-on-surface">
-                    Connect Google Account
+                    Supabase Google OAuth Setup
                   </h3>
-                  <span className="font-mono text-[10px] text-primary">Identity & Ledger Verification</span>
+                  <span className="font-mono text-[10px] text-secondary">Native accounts.google.com OAuth</span>
                 </div>
               </div>
               <button
-                onClick={() => setShowGoogleModal(false)}
+                onClick={() => setShowSupabaseModal(false)}
                 className="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-on-surface"
               >
                 <span className="material-symbols-outlined text-[18px]">close</span>
@@ -936,35 +852,37 @@ export const SignInView: React.FC = () => {
             </div>
 
             <p className="text-xs text-on-surface-variant leading-relaxed">
-              Verify your real Google account to link your identity to Flows. This securely encrypts your personal ledger and validates your profile.
+              Enter your Supabase credentials to enable the official Google Sign-In popup flow widely used in production apps.
             </p>
 
-            {/* Authenticate with Real Google Account Form */}
-            <form onSubmit={handleVerifyGoogleAccount} className="flex flex-col space-y-3 bg-surface-container-lowest/60 p-3.5 rounded-2xl border border-outline-variant/20">
+            <form onSubmit={handleSaveSupabaseAndSignIn} className="flex flex-col space-y-3 bg-surface-container-lowest/60 p-3.5 rounded-2xl border border-outline-variant/20">
               <div className="flex flex-col space-y-1">
-                <label className="text-[11px] font-mono text-on-surface font-semibold">
-                  Google Account Email Address
+                <label className="text-[11px] font-mono text-on-surface font-semibold flex items-center justify-between">
+                  <span>Supabase Project URL</span>
+                  <span className="text-[10px] text-primary lowercase font-mono">https://xyz.supabase.co</span>
                 </label>
                 <input
-                  type="email"
-                  value={googleManualEmail}
-                  onChange={(e) => setGoogleManualEmail(e.target.value)}
-                  placeholder="your.google.account@gmail.com"
+                  type="url"
+                  value={supabaseUrlInput}
+                  onChange={(e) => setSupabaseUrlInput(e.target.value)}
+                  placeholder="https://your-project.supabase.co"
                   className="w-full h-10 px-3 bg-surface-container rounded-xl text-xs font-mono text-on-surface border border-outline-variant/30 focus:border-primary focus:outline-none placeholder:text-outline"
                   required
                 />
               </div>
 
               <div className="flex flex-col space-y-1">
-                <label className="text-[11px] font-mono text-on-surface font-semibold">
-                  Full Name on Google Account
+                <label className="text-[11px] font-mono text-on-surface font-semibold flex items-center justify-between">
+                  <span>Supabase Anon Public Key</span>
+                  <span className="text-[10px] text-secondary font-mono">anon key</span>
                 </label>
-                <input
-                  type="text"
-                  value={googleManualName}
-                  onChange={(e) => setGoogleManualName(e.target.value)}
-                  placeholder="e.g. Your Full Name"
-                  className="w-full h-10 px-3 bg-surface-container rounded-xl text-xs font-sans text-on-surface border border-outline-variant/30 focus:border-primary focus:outline-none placeholder:text-outline"
+                <textarea
+                  value={supabaseAnonKeyInput}
+                  onChange={(e) => setSupabaseAnonKeyInput(e.target.value)}
+                  placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                  rows={2}
+                  className="w-full p-2.5 bg-surface-container rounded-xl text-xs font-mono text-on-surface border border-outline-variant/30 focus:border-primary focus:outline-none placeholder:text-outline resize-none"
+                  required
                 />
               </div>
 
@@ -973,35 +891,36 @@ export const SignInView: React.FC = () => {
                 disabled={isSubmitting}
                 className="w-full py-2.5 rounded-xl bg-primary text-on-primary font-headline-sm text-xs font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform shadow-md"
               >
-                <span className="material-symbols-outlined text-[17px]">verified</span>
-                <span>{isSubmitting ? 'Verifying with Google...' : 'Verify & Connect Google Account'}</span>
+                <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                  <path
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                    fill="#4285F4"
+                  />
+                  <path
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                    fill="#34A853"
+                  />
+                  <path
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                    fill="#FBBC05"
+                  />
+                  <path
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                    fill="#EA4335"
+                  />
+                </svg>
+                <span>{isSubmitting ? 'Connecting...' : 'Save & Sign In with Google'}</span>
               </button>
             </form>
 
-            {/* Optional Custom Google Cloud OAuth Client ID */}
-            <div className="pt-2 border-t border-outline-variant/20 flex flex-col space-y-2">
-              <span className="font-mono text-[11px] text-on-surface-variant font-semibold">
-                Developer / Custom Google Cloud OAuth Client ID
+            <div className="p-3 rounded-xl bg-surface-container border border-outline-variant/30 text-[11px] text-on-surface-variant flex flex-col space-y-1">
+              <span className="font-bold text-on-surface flex items-center gap-1">
+                <span className="material-symbols-outlined text-[15px] text-secondary">info</span>
+                How to get your credentials:
               </span>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={clientIdInput}
-                  onChange={(e) => setClientIdInput(e.target.value)}
-                  placeholder="xxxx.apps.googleusercontent.com"
-                  className="flex-1 h-9 px-3 bg-surface-container rounded-xl text-[11px] font-mono text-on-surface border border-outline-variant/30 focus:border-primary focus:outline-none placeholder:text-outline"
-                />
-                <button
-                  type="button"
-                  onClick={handleSaveGoogleClientId}
-                  className="px-3 h-9 rounded-xl bg-surface-container-high hover:bg-surface-bright text-primary font-mono text-xs font-bold transition-colors border border-outline-variant/30"
-                >
-                  Save
-                </button>
-              </div>
-              <span className="text-[10px] text-on-surface-variant">
-                Origins: <code className="text-primary font-mono">https://shaardul-18.github.io</code> and <code className="text-primary font-mono">http://localhost:3000</code>
-              </span>
+              <p>1. Open your project on <span className="text-primary font-mono font-bold">supabase.com</span>.</p>
+              <p>2. Go to <span className="font-semibold text-on-surface">Project Settings &gt; API</span> and copy your <span className="font-mono text-primary font-semibold">Project URL</span> & <span className="font-mono text-secondary font-semibold">anon key</span>.</p>
+              <p>3. Under <span className="font-semibold text-on-surface">Authentication &gt; Providers</span>, ensure <span className="font-semibold text-secondary">Google</span> is toggled ON.</p>
             </div>
           </div>
         </div>
