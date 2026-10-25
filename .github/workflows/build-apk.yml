@@ -34,9 +34,8 @@ jobs:
       - name: Build web bundle
         run: npm run build
 
-      - name: Initialize Capacitor Android
+      - name: Sync Capacitor Android
         run: |
-          npx cap add android || true
           npx cap sync android
 
       - name: Set execute permission for Gradle wrapper
