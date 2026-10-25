@@ -1,0 +1,9 @@
+{
+  "appId": "com.flows.app",
+  "appName": "Flows",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  }
+}

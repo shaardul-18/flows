@@ -4,9 +4,10 @@ import { useApp } from '../../context/AppContext';
 interface HeaderProps {
   title?: string;
   subtitle?: string;
+  onOpenInstall?: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ title = 'Flows', subtitle = 'Home' }) => {
+export const Header: React.FC<HeaderProps> = ({ title = 'Flows', subtitle = 'Home', onOpenInstall }) => {
   const { currentUser, isDesktopMode, setIsDesktopMode, logout, setActiveTab } = useApp();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
@@ -37,6 +38,18 @@ export const Header: React.FC<HeaderProps> = ({ title = 'Flows', subtitle = 'Hom
 
         {/* Action Controls & Profile */}
         <div className="flex items-center gap-2">
+          {/* Install on Phone Button */}
+          {onOpenInstall && (
+            <button
+              onClick={onOpenInstall}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary-container/25 hover:bg-secondary-container text-xs font-mono text-secondary hover:text-on-secondary border border-secondary/40 shadow-[0_0_12px_rgba(78,222,163,0.15)] transition-all active:scale-95"
+              title="Install Flows App on Phone"
+            >
+              <span className="material-symbols-outlined text-[16px]">install_mobile</span>
+              <span className="font-bold">Install App</span>
+            </button>
+          )}
+
           {/* Responsive View Switcher Toggle */}
           <button
             onClick={() => setIsDesktopMode(!isDesktopMode)}

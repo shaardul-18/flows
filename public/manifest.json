@@ -1,0 +1,44 @@
+{
+  "name": "Flows — Advanced Expense Split & Treasury Ledger",
+  "short_name": "Flows",
+  "description": "Unified private wealth ledger, bill splits, receipt OCR, and debt simplification.",
+  "id": "/flows/",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0b1326",
+  "theme_color": "#0b1326",
+  "categories": ["finance", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Split Bill",
+      "url": "./index.html#splits",
+      "description": "Quickly split a bill with friends"
+    },
+    {
+      "name": "Scan Receipt",
+      "url": "./index.html#scanner",
+      "description": "Scan an OCR receipt"
+    },
+    {
+      "name": "Log Cash",
+      "url": "./index.html#dashboard",
+      "description": "Log cash transaction"
+    }
+  ]
+}

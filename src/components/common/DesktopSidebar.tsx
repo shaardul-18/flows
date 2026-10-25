@@ -5,12 +5,14 @@ interface DesktopSidebarProps {
   onOpenExport: () => void;
   onOpenLogCash: () => void;
   onOpenNewSplit: () => void;
+  onOpenInstall?: () => void;
 }
 
 export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
   onOpenExport,
   onOpenLogCash,
   onOpenNewSplit,
+  onOpenInstall,
 }) => {
   const { activeTab, setActiveTab, currentUser, logout } = useApp();
 
@@ -98,6 +100,16 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
             <span className="material-symbols-outlined text-[20px] text-secondary">table_chart</span>
             <span>Export & Reports (.xlsx)</span>
           </button>
+
+          {onOpenInstall && (
+            <button
+              onClick={onOpenInstall}
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl font-semibold text-sm text-secondary hover:bg-secondary-container/20 transition-all text-left mt-1 border border-secondary/30 bg-secondary-container/10"
+            >
+              <span className="material-symbols-outlined text-[20px] text-secondary">install_mobile</span>
+              <span>Install on Phone</span>
+            </button>
+          )}
         </nav>
       </div>
 

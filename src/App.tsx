@@ -12,6 +12,7 @@ import { DesktopLedgerView } from './components/desktop/DesktopLedgerView';
 import { LogCashModal } from './components/modals/LogCashModal';
 import { CreateSplitModal } from './components/modals/CreateSplitModal';
 import { ExportModal } from './components/modals/ExportModal';
+import { InstallAppModal } from './components/modals/InstallAppModal';
 import { SignInView } from './components/auth/SignInView';
 
 export const App: React.FC = () => {
@@ -20,6 +21,7 @@ export const App: React.FC = () => {
   const [isLogCashOpen, setIsLogCashOpen] = useState(false);
   const [isCreateSplitOpen, setIsCreateSplitOpen] = useState(false);
   const [isExportOpen, setIsExportOpen] = useState(false);
+  const [isInstallOpen, setIsInstallOpen] = useState(false);
 
   React.useEffect(() => {
     const handleHash = () => {
@@ -95,9 +97,14 @@ export const App: React.FC = () => {
             onOpenExport={() => setIsExportOpen(true)}
             onOpenLogCash={() => setIsLogCashOpen(true)}
             onOpenNewSplit={() => setIsCreateSplitOpen(true)}
+            onOpenInstall={() => setIsInstallOpen(true)}
           />
           <div className="pl-72 flex-1 flex flex-col min-h-screen bg-surface">
-            <Header title="Flows" subtitle={getSubtitle()} />
+            <Header
+              title="Flows"
+              subtitle={getSubtitle()}
+              onOpenInstall={() => setIsInstallOpen(true)}
+            />
             <main className="flex-1 w-full pt-20 px-6 sm:px-8 max-w-7xl mx-auto">
               {renderContent()}
             </main>
@@ -106,11 +113,15 @@ export const App: React.FC = () => {
       ) : (
         /* Mobile-First Layout matching Google Stitch */
         <div className="flex flex-col min-h-screen w-full relative">
-          <Header title="Flows" subtitle={getSubtitle()} />
+          <Header
+            title="Flows"
+            subtitle={getSubtitle()}
+            onOpenInstall={() => setIsInstallOpen(true)}
+          />
           <main className="flex-1 w-full pt-20 pb-24 px-4 max-w-2xl mx-auto">
             {renderContent()}
           </main>
-          <MobileNav />
+          <MobileNav onOpenInstall={() => setIsInstallOpen(true)} />
         </div>
       )}
 
@@ -126,6 +137,10 @@ export const App: React.FC = () => {
       <ExportModal
         isOpen={isExportOpen}
         onClose={() => setIsExportOpen(false)}
+      />
+      <InstallAppModal
+        isOpen={isInstallOpen}
+        onClose={() => setIsInstallOpen(false)}
       />
     </div>
   );

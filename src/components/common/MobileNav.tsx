@@ -1,7 +1,11 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
 
-export const MobileNav: React.FC = () => {
+interface MobileNavProps {
+  onOpenInstall?: () => void;
+}
+
+export const MobileNav: React.FC<MobileNavProps> = () => {
   const { activeTab, setActiveTab } = useApp();
 
   const navItems = [
