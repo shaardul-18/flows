@@ -3,8 +3,14 @@
 @tailwind utilities;
 
 @layer base {
-  html, body {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html, body, #root {
     width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
     margin: 0;
     padding: 0;
     background-color: #0b1326;
@@ -15,6 +21,7 @@
 
   body {
     overscroll-behavior-y: none;
+    position: relative;
   }
 
   .material-symbols-outlined {

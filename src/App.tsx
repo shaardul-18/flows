@@ -89,36 +89,36 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-surface text-on-surface flex flex-col font-sans selection:bg-secondary selection:text-on-secondary">
+    <div className="min-h-screen bg-surface text-on-surface flex flex-col font-sans selection:bg-secondary selection:text-on-secondary w-full max-w-full overflow-x-hidden">
       {/* If desktop mode is active, render desktop sidebar layout */}
       {isDesktopMode ? (
-        <div className="flex w-full min-h-screen">
+        <div className="flex w-full min-h-screen max-w-full overflow-x-hidden">
           <DesktopSidebar
             onOpenExport={() => setIsExportOpen(true)}
             onOpenLogCash={() => setIsLogCashOpen(true)}
             onOpenNewSplit={() => setIsCreateSplitOpen(true)}
             onOpenInstall={() => setIsInstallOpen(true)}
           />
-          <div className="pl-72 flex-1 flex flex-col min-h-screen bg-surface">
+          <div className="lg:pl-72 flex-1 flex flex-col min-h-screen bg-surface w-full max-w-full overflow-x-hidden">
             <Header
               title="Flows"
               subtitle={getSubtitle()}
               onOpenInstall={() => setIsInstallOpen(true)}
             />
-            <main className="flex-1 w-full pt-20 px-6 sm:px-8 max-w-7xl mx-auto">
+            <main className="flex-1 w-full pt-20 px-4 sm:px-6 md:px-8 max-w-7xl mx-auto overflow-x-hidden">
               {renderContent()}
             </main>
           </div>
         </div>
       ) : (
         /* Mobile-First Layout matching Google Stitch */
-        <div className="flex flex-col min-h-screen w-full relative">
+        <div className="flex flex-col min-h-screen w-full max-w-full overflow-x-hidden relative">
           <Header
             title="Flows"
             subtitle={getSubtitle()}
             onOpenInstall={() => setIsInstallOpen(true)}
           />
-          <main className="flex-1 w-full pt-20 pb-24 px-4 max-w-2xl mx-auto">
+          <main className="flex-1 w-full pt-20 pb-24 px-3 sm:px-4 max-w-2xl mx-auto overflow-x-hidden">
             {renderContent()}
           </main>
           <MobileNav onOpenInstall={() => setIsInstallOpen(true)} />

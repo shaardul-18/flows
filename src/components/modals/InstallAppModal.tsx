@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useApp } from '../../context/AppContext';
 
 interface InstallAppModalProps {
   isOpen: boolean;
@@ -6,6 +7,7 @@ interface InstallAppModalProps {
 }
 
 export const InstallAppModal: React.FC<InstallAppModalProps> = ({ isOpen, onClose }) => {
+  const { setAppInstalled } = useApp();
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isInstalled, setIsInstalled] = useState(false);
   const [activePlatform, setActivePlatform] = useState<'android' | 'ios' | 'desktop'>('android');
@@ -28,6 +30,7 @@ export const InstallAppModal: React.FC<InstallAppModalProps> = ({ isOpen, onClos
     // Check if running in standalone mode (already installed)
     if (window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone) {
       setIsInstalled(true);
+      setAppInstalled(true);
     }
 
     // Capture beforeinstallprompt event on Chromium
@@ -39,13 +42,14 @@ export const InstallAppModal: React.FC<InstallAppModalProps> = ({ isOpen, onClos
     window.addEventListener('beforeinstallprompt', handler);
     window.addEventListener('appinstalled', () => {
       setIsInstalled(true);
+      setAppInstalled(true);
       setDeferredPrompt(null);
     });
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handler);
     };
-  }, []);
+  }, [setAppInstalled]);
 
   const handleInstallClick = async () => {
     if (deferredPrompt) {
@@ -53,6 +57,7 @@ export const InstallAppModal: React.FC<InstallAppModalProps> = ({ isOpen, onClos
       const { outcome } = await deferredPrompt.userChoice;
       if (outcome === 'accepted') {
         setIsInstalled(true);
+        setAppInstalled(true);
       }
       setDeferredPrompt(null);
     } else {
@@ -256,17 +261,30 @@ export const InstallAppModal: React.FC<InstallAppModalProps> = ({ isOpen, onClos
           </div>
         )}
 
-        {/* Value badges footer */}
-        <div className="pt-2 border-t border-outline-variant/15 flex items-center justify-between text-[10px] font-mono text-on-surface-variant">
-          <span className="flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-secondary" />
-            Full-Screen Standalone
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-            Offline Sync Enabled
-          </span>
-          <span>Zero App Store Fees</span>
+        {/* Value badges & dismissal footer */}
+        <div className="pt-3 border-t border-outline-variant/15 flex flex-col sm:flex-row items-center justify-between gap-2.5">
+          <button
+            onClick={() => {
+              setAppInstalled(true);
+              onClose();
+            }}
+            className="w-full sm:w-auto py-1.5 px-3 rounded-xl bg-surface-container hover:bg-surface-container-highest text-[11px] font-mono text-on-surface-variant hover:text-secondary flex items-center justify-center gap-1.5 transition-colors border border-outline-variant/30 active:scale-95"
+            title="Permanently hide the install button if you already have the app on your home screen"
+          >
+            <span className="material-symbols-outlined text-[15px] text-secondary">check_circle</span>
+            <span>Already Installed? Hide Button</span>
+          </button>
+
+          <div className="flex items-center gap-2.5 text-[10px] font-mono text-on-surface-variant">
+            <span className="flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-secondary" />
+              Standalone
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+              Offline Ready
+            </span>
+          </div>
         </div>
       </div>
     </div>

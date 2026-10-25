@@ -14,7 +14,7 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
   onOpenNewSplit,
   onOpenInstall,
 }) => {
-  const { activeTab, setActiveTab, currentUser, logout } = useApp();
+  const { activeTab, setActiveTab, currentUser, logout, isAppInstalled } = useApp();
 
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard / Overview', icon: 'grid_view' },
@@ -26,7 +26,7 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
   ];
 
   return (
-    <aside className="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest z-40 flex flex-col justify-between border-r border-outline-variant/30 shadow-[0_1px_12px_rgba(0,0,0,0.5)]">
+    <aside className="hidden lg:flex fixed left-0 top-0 h-full w-72 bg-surface-container-lowest z-40 flex flex-col justify-between border-r border-outline-variant/30 shadow-[0_1px_12px_rgba(0,0,0,0.5)]">
       <div className="flex flex-col">
         {/* Top Brand Header */}
         <div className="h-16 px-5 flex items-center justify-between border-b border-outline-variant/20 bg-surface-container-lowest">
@@ -101,7 +101,7 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
             <span>Export & Reports (.xlsx)</span>
           </button>
 
-          {onOpenInstall && (
+          {!isAppInstalled && onOpenInstall && (
             <button
               onClick={onOpenInstall}
               className="flex items-center gap-3 px-3 py-2.5 rounded-xl font-semibold text-sm text-secondary hover:bg-secondary-container/20 transition-all text-left mt-1 border border-secondary/30 bg-secondary-container/10"

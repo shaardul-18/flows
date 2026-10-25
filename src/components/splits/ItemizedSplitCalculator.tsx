@@ -666,8 +666,8 @@ export const ItemizedSplitCalculator: React.FC = () => {
       </div>
 
       {/* WhatsApp Message Preview Section matching Stitch */}
-      <div className="pt-2">
-        <div className="flex items-center justify-between mb-2">
+      <div className="pt-2 w-full max-w-full overflow-hidden">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
           <div className="flex items-center gap-1.5 text-secondary">
             <span className="material-symbols-outlined text-[18px]">chat</span>
             <span className="font-mono text-xs font-bold uppercase tracking-wider">
@@ -676,8 +676,8 @@ export const ItemizedSplitCalculator: React.FC = () => {
           </div>
 
           {/* Target recipient selector */}
-          <div className="flex items-center gap-1 bg-surface-container px-2.5 py-1 rounded-lg text-xs font-mono border border-outline-variant/30">
-            <span className="text-on-surface-variant">Send to:</span>
+          <div className="flex items-center gap-1 bg-surface-container px-2.5 py-1 rounded-lg text-xs font-mono border border-outline-variant/30 max-w-full overflow-hidden">
+            <span className="text-on-surface-variant shrink-0">Send to:</span>
             <select
               value={targetRecipientId}
               onChange={(e) => setTargetRecipientId(e.target.value)}

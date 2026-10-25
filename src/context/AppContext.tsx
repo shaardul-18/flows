@@ -27,7 +27,10 @@ interface AppContextType {
   isBalanceHidden: boolean;
   toggleBalanceVisibility: () => void;
   isAuthenticated: boolean;
+  isAppInstalled: boolean;
+  setAppInstalled: (val: boolean) => void;
   login: (email: string, name?: string) => void;
+  loginWithGoogle: (profile: { email: string; name: string; avatar?: string }) => void;
   logout: () => void;
   
   // Actions
@@ -62,6 +65,7 @@ const STORAGE_KEYS = {
   SETTLEMENTS: 'flows_settlements_v1',
   DESKTOP_MODE: 'flows_desktop_mode_v1',
   AUTH: 'flows_auth_v1',
+  INSTALLED: 'flows_app_installed',
 };
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -88,15 +92,95 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [selectedExpenseForSplit, setSelectedExpenseForSplit] = useState<Expense | null>(INITIAL_EXPENSES[0]);
   const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
+
+  // Desktop mode: ALWAYS false on mobile screens (<1024px) to prevent layout blowouts
   const [isDesktopMode, setIsDesktopMode] = useState<boolean>(() => {
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+      return false;
+    }
     const saved = localStorage.getItem(STORAGE_KEYS.DESKTOP_MODE);
     return saved ? JSON.parse(saved) : (typeof window !== 'undefined' && window.innerWidth >= 1024);
   });
+
+  // App Installed Detection (Capacitor Android native, Android WebView, PWA standalone, iOS or manual install)
+  const [isAppInstalled, setIsAppInstalled] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    
+    // Check Capacitor native app
+    if ((window as any).Capacitor?.isNativePlatform?.()) return true;
+    if (window.location.protocol === 'capacitor:' || (window.location.hostname === 'localhost' && !window.location.port)) return true;
+    
+    // Check Android WebView or Capacitor user agent
+    const ua = (window.navigator?.userAgent || '').toLowerCase();
+    if (ua.includes('capacitor') || ua.includes('wv') || ua.includes('crosswalk')) return true;
+
+    // Check PWA display modes
+    if (window.matchMedia) {
+      if (window.matchMedia('(display-mode: standalone)').matches) return true;
+      if (window.matchMedia('(display-mode: fullscreen)').matches) return true;
+      if (window.matchMedia('(display-mode: minimal-ui)').matches) return true;
+      if (window.matchMedia('(display-mode: window-controls-overlay)').matches) return true;
+    }
+
+    // iOS Safari standalone
+    if ((window.navigator as any).standalone === true) return true;
+    
+    // Android TWA / Installed referrer
+    if (document.referrer && document.referrer.includes('android-app://')) return true;
+    
+    const saved = localStorage.getItem(STORAGE_KEYS.INSTALLED);
+    return saved === 'true' || saved === '"true"';
+  });
+
   const [isBalanceHidden, setIsBalanceHidden] = useState<boolean>(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.AUTH);
     return saved !== null ? JSON.parse(saved) : true;
   });
+
+  // Auto-adapt if user resizes or rotates phone
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 1024 && isDesktopMode) {
+        setIsDesktopMode(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isDesktopMode]);
+
+  // Monitor PWA installation events
+  useEffect(() => {
+    const handleInstalled = () => {
+      setIsAppInstalled(true);
+      localStorage.setItem(STORAGE_KEYS.INSTALLED, 'true');
+    };
+    window.addEventListener('appinstalled', handleInstalled);
+
+    if (window.matchMedia) {
+      const mqlStandalone = window.matchMedia('(display-mode: standalone)');
+      const mqlFullscreen = window.matchMedia('(display-mode: fullscreen)');
+      const handleModeChange = (e: MediaQueryListEvent) => {
+        if (e.matches) {
+          setIsAppInstalled(true);
+          localStorage.setItem(STORAGE_KEYS.INSTALLED, 'true');
+        }
+      };
+      mqlStandalone.addEventListener('change', handleModeChange);
+      mqlFullscreen.addEventListener('change', handleModeChange);
+      return () => {
+        window.removeEventListener('appinstalled', handleInstalled);
+        mqlStandalone.removeEventListener('change', handleModeChange);
+        mqlFullscreen.removeEventListener('change', handleModeChange);
+      };
+    }
+    return () => window.removeEventListener('appinstalled', handleInstalled);
+  }, []);
+
+  const setAppInstalled = (val: boolean) => {
+    setIsAppInstalled(val);
+    localStorage.setItem(STORAGE_KEYS.INSTALLED, JSON.stringify(val));
+  };
 
   const login = (email: string, name?: string) => {
     setIsAuthenticated(true);
@@ -106,6 +190,23 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         prev.map((u) => (u.isCurrentUser ? { ...u, name, email } : u))
       );
     }
+  };
+
+  const loginWithGoogle = (googleProfile: { email: string; name: string; avatar?: string }) => {
+    setIsAuthenticated(true);
+    localStorage.setItem(STORAGE_KEYS.AUTH, JSON.stringify(true));
+    setUsers((prev) =>
+      prev.map((u) =>
+        u.isCurrentUser
+          ? {
+              ...u,
+              name: googleProfile.name,
+              email: googleProfile.email,
+              avatar: googleProfile.avatar || u.avatar,
+            }
+          : u
+      )
+    );
   };
 
   const logout = () => {
@@ -379,7 +480,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         isBalanceHidden,
         toggleBalanceVisibility,
         isAuthenticated,
+        isAppInstalled,
+        setAppInstalled,
         login,
+        loginWithGoogle,
         logout,
         addExpense,
         updateExpense,
