@@ -6,11 +6,13 @@ import { Expense } from '../../types';
 interface DashboardViewProps {
   onOpenLogCash: () => void;
   onOpenNewSplit: () => void;
+  onOpenTreasury?: () => void;
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({
   onOpenLogCash,
   onOpenNewSplit,
+  onOpenTreasury,
 }) => {
   const {
     currentUser,
@@ -25,6 +27,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     monthlyBudget,
     monthlySpent,
     monthlyRemaining,
+    totalAvailableTreasury,
+    totalBankBalance,
+    totalCashBalance,
     setActiveTab,
     setSelectedExpenseForSplit,
   } = useApp();
@@ -71,7 +76,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     setActiveTab('splits');
   };
 
-  const budgetPercent = Math.min(100, Math.round((monthlySpent / monthlyBudget) * 100));
+  const daysInMonth = new Date().getDate();
+  const dailyRunRate = daysInMonth > 0 ? Math.round(monthlySpent / daysInMonth) : 0;
+  const budgetPercent = monthlyBudget > 0 ? Math.min(100, Math.round((monthlySpent / monthlyBudget) * 100)) : 0;
 
   return (
     <div className="flex flex-col w-full space-y-4 max-w-4xl mx-auto pb-12">
@@ -122,23 +129,35 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <span className="font-mono text-xs text-on-surface-variant uppercase tracking-wider font-semibold">
               Total Available Treasury
             </span>
-            <button
-              onClick={toggleBalanceVisibility}
-              aria-label="Toggle Balance Visibility"
-              className="text-on-surface-variant hover:text-on-surface transition-colors p-1"
-            >
-              <span className="material-symbols-outlined text-[18px]">
-                {isBalanceHidden ? 'visibility_off' : 'visibility'}
-              </span>
-            </button>
+            <div className="flex items-center gap-1.5">
+              {onOpenTreasury && (
+                <button
+                  onClick={onOpenTreasury}
+                  className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container-high hover:bg-surface-bright text-[11px] font-mono text-primary hover:text-primary-fixed transition-colors border border-primary/30 active:scale-95 shadow-sm"
+                  title="Calibrate Real Starting Funds"
+                >
+                  <span className="material-symbols-outlined text-[14px]">tune</span>
+                  <span className="font-semibold">Calibrate Funds</span>
+                </button>
+              )}
+              <button
+                onClick={toggleBalanceVisibility}
+                aria-label="Toggle Balance Visibility"
+                className="text-on-surface-variant hover:text-on-surface transition-colors p-1"
+              >
+                <span className="material-symbols-outlined text-[18px]">
+                  {isBalanceHidden ? 'visibility_off' : 'visibility'}
+                </span>
+              </button>
+            </div>
           </div>
 
           <div className="flex items-baseline gap-2 my-1">
             <span className="font-mono text-3xl sm:text-4xl text-on-surface font-bold tracking-tight">
-              {isBalanceHidden ? '₹ ••••••••' : '₹1,42,850.00'}
+              {isBalanceHidden ? '₹ ••••••••' : formatINR(totalAvailableTreasury)}
             </span>
             <span className="font-mono text-[11px] text-secondary font-semibold px-2 py-0.5 rounded-full bg-secondary/15 border border-secondary/20">
-              +2.4% vs last wk
+              Verified Ledger
             </span>
           </div>
 
@@ -147,14 +166,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             {/* Left Pill: Bank & UPI Balance */}
             <div className="flex flex-col p-3 rounded-xl bg-surface-container-lowest/80 backdrop-blur-sm border border-outline-variant/20">
               <div className="flex items-center gap-1.5 mb-1">
-                <span className="w-2 h-2 rounded-full bg-primary-container" />
+                <span className="w-2 h-2 rounded-full bg-primary" />
                 <span className="text-xs text-on-surface-variant font-medium">Bank & UPI</span>
               </div>
               <span className="font-mono text-sm sm:text-base text-on-surface font-semibold truncate">
-                {isBalanceHidden ? '₹ •••••' : '₹1,38,350.00'}
+                {isBalanceHidden ? '₹ •••••' : formatINR(totalBankBalance)}
               </span>
               <span className="font-mono text-[10px] text-primary mt-0.5 font-semibold">
-                3 Accounts Linked
+                Liquid Bank Funds
               </span>
             </div>
 
@@ -165,10 +184,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 <span className="text-xs text-on-surface-variant font-medium">Cash in Hand</span>
               </div>
               <span className="font-mono text-sm sm:text-base text-on-surface font-semibold truncate">
-                {isBalanceHidden ? '₹ •••••' : '₹4,500.00'}
+                {isBalanceHidden ? '₹ •••••' : formatINR(totalCashBalance)}
               </span>
               <span className="font-mono text-[10px] text-secondary mt-0.5 font-semibold">
-                Reconciled Today
+                Wallet Cash Balance
               </span>
             </div>
           </div>
@@ -346,7 +365,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <span className="font-mono text-[10px] text-on-surface-variant uppercase font-semibold">
               Daily Run Rate
             </span>
-            <span className="font-mono text-xs font-bold text-on-surface">₹980 / day</span>
+            <span className="font-mono text-xs font-bold text-on-surface">
+              {formatINR(dailyRunRate)} / day
+            </span>
           </div>
         </div>
 
@@ -366,13 +387,15 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
         <div className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-surface-container border border-outline-variant/20 shrink-0">
           <div className="w-8 h-8 rounded-lg bg-surface-container-highest flex items-center justify-center text-secondary-fixed">
-            <span className="material-symbols-outlined text-[18px]">savings</span>
+            <span className="material-symbols-outlined text-[18px]">payments</span>
           </div>
           <div className="flex flex-col">
             <span className="font-mono text-[10px] text-on-surface-variant uppercase font-semibold">
-              Auto-Save Vault
+              Available Cash
             </span>
-            <span className="font-mono text-xs font-bold text-on-surface">₹12,400</span>
+            <span className="font-mono text-xs font-bold text-on-surface">
+              {formatINR(totalCashBalance)}
+            </span>
           </div>
         </div>
       </div>
@@ -431,7 +454,34 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
         {/* Transaction List */}
         <div className="flex flex-col space-y-2">
-          {filteredExpenses.map((exp) => {
+          {filteredExpenses.length === 0 ? (
+            <div className="p-8 rounded-2xl bg-surface-container text-center flex flex-col items-center justify-center space-y-3 border border-outline-variant/20">
+              <div className="w-12 h-12 rounded-2xl bg-surface-container-high flex items-center justify-center text-secondary border border-secondary/20">
+                <span className="material-symbols-outlined text-[26px]">receipt_long</span>
+              </div>
+              <div className="flex flex-col space-y-1">
+                <span className="font-headline-sm text-sm font-bold text-on-surface">No Expenses Recorded Yet</span>
+                <p className="text-xs text-on-surface-variant max-w-xs leading-relaxed">
+                  Your private wealth ledger is active. Log a cash expense, scan a bill, or split with friends to record your first transaction.
+                </p>
+              </div>
+              <div className="flex items-center gap-2 pt-1">
+                <button
+                  onClick={onOpenLogCash}
+                  className="px-3.5 py-2 rounded-xl bg-secondary text-surface text-xs font-mono font-bold hover:opacity-90 active:scale-95 transition-all shadow-md"
+                >
+                  + Log Cash Expense
+                </button>
+                <button
+                  onClick={onOpenNewSplit}
+                  className="px-3.5 py-2 rounded-xl bg-surface-container-high hover:bg-surface-bright text-primary text-xs font-mono font-bold transition-all border border-primary/20"
+                >
+                  Split a Bill
+                </button>
+              </div>
+            </div>
+          ) : (
+            filteredExpenses.map((exp) => {
             const isPayer = exp.payerId === currentUser.id;
             const mySplit = exp.splits.find((s) => s.memberId === currentUser.id);
             const isSettled = exp.status === 'settled';
@@ -524,7 +574,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </div>
               </div>
             );
-          })}
+          }))}
         </div>
       </section>
     </div>

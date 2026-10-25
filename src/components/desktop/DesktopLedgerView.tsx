@@ -7,12 +7,14 @@ interface DesktopLedgerViewProps {
   onOpenLogCash: () => void;
   onOpenNewSplit: () => void;
   onOpenExport: () => void;
+  onOpenTreasury?: () => void;
 }
 
 export const DesktopLedgerView: React.FC<DesktopLedgerViewProps> = ({
   onOpenLogCash,
   onOpenNewSplit,
   onOpenExport,
+  onOpenTreasury,
 }) => {
   const {
     currentUser,
@@ -24,6 +26,9 @@ export const DesktopLedgerView: React.FC<DesktopLedgerViewProps> = ({
     monthlySpent,
     monthlyRemaining,
     monthlyBudget,
+    totalAvailableTreasury,
+    totalBankBalance,
+    totalCashBalance,
     isBalanceHidden,
     toggleBalanceVisibility,
     setSelectedExpenseForSplit,
@@ -52,6 +57,8 @@ export const DesktopLedgerView: React.FC<DesktopLedgerViewProps> = ({
     setSelectedExpenseForSplit(exp);
     setActiveTab('splits');
   };
+
+  const budgetPct = monthlyBudget > 0 ? Math.min(100, Math.round((monthlySpent / monthlyBudget) * 100)) : 0;
 
   return (
     <div className="flex flex-col w-full space-y-6 pb-20">
@@ -82,6 +89,17 @@ export const DesktopLedgerView: React.FC<DesktopLedgerViewProps> = ({
             <span className="material-symbols-outlined text-primary text-[18px]">calendar_month</span>
             <span>Oct 1 – Oct 24, 2026</span>
           </div>
+
+          {onOpenTreasury && (
+            <button
+              onClick={onOpenTreasury}
+              className="h-10 px-4 rounded-xl bg-surface-container-high hover:bg-surface-bright text-primary font-headline-sm text-xs font-bold flex items-center gap-1.5 active:scale-95 transition-all border border-outline-variant/30"
+              title="Calibrate starting bank and cash funds"
+            >
+              <span className="material-symbols-outlined text-primary text-[18px]">tune</span>
+              <span>Calibrate Funds</span>
+            </button>
+          )}
 
           <button
             onClick={onOpenNewSplit}
@@ -120,18 +138,36 @@ export const DesktopLedgerView: React.FC<DesktopLedgerViewProps> = ({
                 Total Net Liquidity
               </span>
               <span className="px-2 py-0.5 rounded-full bg-secondary/15 text-secondary font-mono text-[11px] font-bold flex items-center gap-1">
-                <span className="material-symbols-outlined text-[14px]">trending_up</span>+2.4% vs lw
+                <span className="material-symbols-outlined text-[14px]">verified</span>Active Treasury
               </span>
             </div>
             <div className="font-mono text-3xl font-bold text-on-surface tracking-tight mt-1">
-              {isBalanceHidden ? '₹ ••••••••' : '₹1,42,850.00'}
+              {isBalanceHidden ? '₹ ••••••••' : formatINR(totalAvailableTreasury)}
             </div>
           </div>
           <div className="mt-4 pt-3 flex items-center justify-between text-xs text-on-surface-variant border-t border-outline-variant/20 font-mono">
-            <span className="flex items-center gap-1 text-primary">
-              <span className="material-symbols-outlined text-[16px]">verified_user</span> 3 Banks Active
-            </span>
-            <span className="text-secondary font-bold">₹3,400.00 today</span>
+            {onOpenTreasury ? (
+              <button
+                onClick={onOpenTreasury}
+                className="flex items-center gap-1 text-primary hover:text-primary-bright font-bold transition-colors"
+              >
+                <span className="material-symbols-outlined text-[16px]">tune</span>
+                <span>Calibrate Funds</span>
+              </button>
+            ) : (
+              <span className="flex items-center gap-1 text-primary">
+                <span className="material-symbols-outlined text-[16px]">verified_user</span> Real-Time Funds
+              </span>
+            )}
+            <button
+              onClick={toggleBalanceVisibility}
+              className="text-on-surface-variant hover:text-on-surface flex items-center gap-1"
+            >
+              <span className="material-symbols-outlined text-[14px]">
+                {isBalanceHidden ? 'visibility' : 'visibility_off'}
+              </span>
+              <span>{isBalanceHidden ? 'Show' : 'Hide'}</span>
+            </button>
           </div>
         </div>
 
@@ -143,21 +179,27 @@ export const DesktopLedgerView: React.FC<DesktopLedgerViewProps> = ({
               <span className="material-symbols-outlined text-primary text-[18px]">account_balance</span>
             </div>
             <div className="font-mono text-2xl font-bold text-on-surface">
-              {isBalanceHidden ? '₹ •••••' : '₹1,38,350.00'}
+              {isBalanceHidden ? '₹ •••••' : formatINR(totalBankBalance)}
             </div>
           </div>
           <div className="flex items-center gap-1.5 mt-3">
             <div className="flex-1 bg-surface-container-high rounded-xl p-2 flex flex-col border border-outline-variant/20">
-              <span className="font-mono text-[10px] text-on-surface-variant">HDFC</span>
-              <span className="font-mono text-xs font-bold text-on-surface">₹84.2k</span>
+              <span className="font-mono text-[10px] text-on-surface-variant">Bank Balance</span>
+              <span className="font-mono text-xs font-bold text-on-surface">
+                {isBalanceHidden ? '••••' : formatCompactINR(totalBankBalance)}
+              </span>
             </div>
             <div className="flex-1 bg-surface-container-high rounded-xl p-2 flex flex-col border border-outline-variant/20">
-              <span className="font-mono text-[10px] text-on-surface-variant">ICICI</span>
-              <span className="font-mono text-xs font-bold text-on-surface">₹41.1k</span>
+              <span className="font-mono text-[10px] text-on-surface-variant">Pending Split</span>
+              <span className="font-mono text-xs font-bold text-secondary">
+                {isBalanceHidden ? '••••' : `+${formatCompactINR(totalYouAreOwed)}`}
+              </span>
             </div>
             <div className="flex-1 bg-surface-container-high rounded-xl p-2 flex flex-col border border-outline-variant/20">
-              <span className="font-mono text-[10px] text-on-surface-variant">PhonePe</span>
-              <span className="font-mono text-xs font-bold text-on-surface">₹13.0k</span>
+              <span className="font-mono text-[10px] text-on-surface-variant">You Owe</span>
+              <span className="font-mono text-xs font-bold text-error">
+                {isBalanceHidden ? '••••' : `-${formatCompactINR(totalYouOwe)}`}
+              </span>
             </div>
           </div>
         </div>
@@ -170,14 +212,14 @@ export const DesktopLedgerView: React.FC<DesktopLedgerViewProps> = ({
               <span className="material-symbols-outlined text-secondary text-[18px]">payments</span>
             </div>
             <div className="font-mono text-2xl font-bold text-on-surface">
-              {isBalanceHidden ? '₹ •••••' : '₹4,500.00'}
+              {isBalanceHidden ? '₹ •••••' : formatINR(totalCashBalance)}
             </div>
           </div>
           <div className="flex items-center justify-between bg-surface-container-high px-2.5 py-1.5 rounded-xl border border-outline-variant/20 mt-3 font-mono text-xs">
             <span className="text-secondary flex items-center gap-1 font-bold">
-              <span className="w-1.5 h-1.5 rounded-full bg-secondary" />Reconciled
+              <span className="w-1.5 h-1.5 rounded-full bg-secondary" />Physical
             </span>
-            <span className="text-on-surface-variant text-[10px]">Today</span>
+            <span className="text-on-surface-variant text-[10px]">Verified</span>
           </div>
         </div>
 
@@ -186,8 +228,8 @@ export const DesktopLedgerView: React.FC<DesktopLedgerViewProps> = ({
           <div>
             <div className="flex items-center justify-between text-on-surface-variant mb-1">
               <span className="font-mono text-xs uppercase font-semibold">Monthly Budget</span>
-              <span className="font-mono text-xs text-secondary bg-secondary/15 px-2 py-0.5 rounded-full font-bold">
-                62% Used
+              <span className={`font-mono text-xs px-2 py-0.5 rounded-full font-bold ${budgetPct > 90 ? 'text-error bg-error/15' : 'text-secondary bg-secondary/15'}`}>
+                {budgetPct}% Used
               </span>
             </div>
             <div className="font-mono text-2xl font-bold text-on-surface">
@@ -196,10 +238,10 @@ export const DesktopLedgerView: React.FC<DesktopLedgerViewProps> = ({
           </div>
           <div className="mt-3">
             <div className="w-full h-2 rounded-full bg-surface-container-high overflow-hidden flex">
-              <div className="h-full bg-secondary rounded-full" style={{ width: '62%' }} />
+              <div className={`h-full rounded-full transition-all duration-500 ${budgetPct > 90 ? 'bg-error' : 'bg-secondary'}`} style={{ width: `${budgetPct}%` }} />
             </div>
             <div className="flex items-center justify-between mt-1.5 text-[11px] font-mono text-on-surface-variant">
-              <span>Spent {formatINR(monthlySpent, false)}</span>
+              <span>Cap: {formatINR(monthlyBudget, false)}</span>
               <span className="text-secondary font-bold">Rem. {formatINR(monthlyRemaining, false)}</span>
             </div>
           </div>
@@ -256,7 +298,20 @@ export const DesktopLedgerView: React.FC<DesktopLedgerViewProps> = ({
               </tr>
             </thead>
             <tbody className="divide-y divide-outline-variant/15 text-xs">
-              {filteredExpenses.map((exp) => {
+              {filteredExpenses.length === 0 ? (
+                <tr>
+                  <td colSpan={8} className="py-12 text-center text-on-surface-variant">
+                    <div className="flex flex-col items-center justify-center space-y-2">
+                      <span className="material-symbols-outlined text-4xl text-outline-variant">receipt_long</span>
+                      <p className="text-sm font-semibold text-on-surface">No transactions logged yet</p>
+                      <p className="text-xs text-on-surface-variant max-w-sm">
+                        Your treasury ledger is active and ready. Click "Split a Bill" or "Quick Cash" above to record your first expense.
+                      </p>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                filteredExpenses.map((exp) => {
                 const payer = users.find((u) => u.id === exp.payerId)?.name || 'Unknown';
                 const isSettled = exp.status === 'settled';
 
@@ -343,7 +398,7 @@ export const DesktopLedgerView: React.FC<DesktopLedgerViewProps> = ({
                     </td>
                   </tr>
                 );
-              })}
+              }))}
             </tbody>
           </table>
         </div>

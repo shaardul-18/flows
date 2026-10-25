@@ -17,6 +17,14 @@ export type ExpenseCategory =
   | 'Micro-Leak'
   | 'Other';
 
+export interface TreasurySettings {
+  bankBalance: number;       // Actual initial bank & UPI balance
+  cashBalance: number;       // Actual initial physical cash balance
+  monthlyBudget: number;     // User's monthly budget
+  upiId?: string;            // User's personal UPI ID
+  isSetupComplete: boolean;  // Has user entered their real starting funds?
+}
+
 export interface User {
   id: string;
   name: string;
@@ -26,6 +34,8 @@ export interface User {
   upiId: string;
   phone?: string;
   isCurrentUser?: boolean;
+  googleConnected?: boolean;
+  googleEmail?: string;
 }
 
 export interface Group {

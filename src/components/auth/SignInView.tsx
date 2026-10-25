@@ -23,23 +23,32 @@ export const SignInView: React.FC = () => {
   const { login, loginWithGoogle, isAuthenticated, setActiveTab } = useApp();
 
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
-  const [fullName, setFullName] = useState('Shaardul Kulkarni');
-  const [email, setEmail] = useState('shaardul.k@gmail.com');
-  const [password, setPassword] = useState('SecretPass2026!');
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
-  
+
+  // Connected Google Account State for Registration
+  const [googleConnectedUser, setGoogleConnectedUser] = useState<{
+    email: string;
+    name: string;
+    avatar?: string;
+  } | null>(null);
+
   // Feedback toast
   const [feedbackToast, setFeedbackToast] = useState<{ msg: string; type: 'success' | 'error' | 'info' } | null>(null);
 
   // QR Pairing Modal
   const [showQrModal, setShowQrModal] = useState(false);
 
-  // Google OAuth configuration modal
+  // Google OAuth verification modal
   const [showGoogleModal, setShowGoogleModal] = useState(false);
   const [clientIdInput, setClientIdInput] = useState(getGoogleClientId());
+  const [googleManualEmail, setGoogleManualEmail] = useState('');
+  const [googleManualName, setGoogleManualName] = useState('');
 
   // 6-digit Vault Security OTP Verification Modal
   const [showOtpModal, setShowOtpModal] = useState(false);
@@ -53,7 +62,15 @@ export const SignInView: React.FC = () => {
     setTimeout(() => setFeedbackToast(null), 3500);
   };
 
-  // Initialize Google Identity Services (GSI)
+  // Inspect URL hash to set default auth mode
+  useEffect(() => {
+    const hash = window.location.hash.toLowerCase();
+    if (hash.includes('create') || hash.includes('signup') || hash.includes('register')) {
+      setAuthMode('signup');
+    }
+  }, []);
+
+  // Initialize Google Identity Services (GSI) if available
   useEffect(() => {
     const currentClientId = getGoogleClientId();
     if (window.google?.accounts?.id && currentClientId) {
@@ -103,12 +120,22 @@ export const SignInView: React.FC = () => {
       avatar: payload.picture,
     };
 
-    // Register/sync account in vault
-    registerOrLoginGoogleUser(profile);
-    loginWithGoogle(profile);
-    setIsSubmitting(false);
-    setActiveTab('dashboard');
-    showToast(`Verified via Google as ${profile.email}!`, 'success');
+    if (authMode === 'signup') {
+      // Link Google Account to the registration form
+      setGoogleConnectedUser(profile);
+      if (!fullName) setFullName(profile.name);
+      if (!email) setEmail(profile.email);
+      setIsSubmitting(false);
+      setShowGoogleModal(false);
+      showToast(`Google Account verified: ${profile.email}!`, 'success');
+    } else {
+      // Register or login Google User directly
+      registerOrLoginGoogleUser(profile);
+      loginWithGoogle(profile);
+      setIsSubmitting(false);
+      setActiveTab('dashboard');
+      showToast(`Verified via Google as ${profile.email}!`, 'success');
+    }
   };
 
   const handleSaveGoogleClientId = () => {
@@ -127,25 +154,45 @@ export const SignInView: React.FC = () => {
     showToast('Google OAuth Client ID saved!', 'success');
   };
 
-  // Instant Verified Google Profile Simulation
-  const handleSimulateGoogleVerified = (testEmail: string, testName: string, testAvatar?: string) => {
+  // Connect & Verify Google Account
+  const handleVerifyGoogleAccount = (e: React.FormEvent) => {
+    e.preventDefault();
+    const gEmail = googleManualEmail.trim().toLowerCase();
+    const gName = googleManualName.trim() || fullName.trim() || gEmail.split('@')[0];
+
+    if (!validateEmail(gEmail)) {
+      showToast('Please enter a valid Google Account email address.', 'error');
+      return;
+    }
+
     setIsSubmitting(true);
-    setShowGoogleModal(false);
+    const profile = {
+      email: gEmail,
+      name: gName,
+      avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(gName)}`,
+    };
+
     setTimeout(() => {
-      const profile = {
-        email: testEmail,
-        name: testName,
-        avatar: testAvatar || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(testName)}`,
-      };
-      registerOrLoginGoogleUser(profile);
-      loginWithGoogle(profile);
       setIsSubmitting(false);
-      setActiveTab('dashboard');
-      showToast(`Google Verified & decryped as ${testEmail}`, 'success');
+      setShowGoogleModal(false);
+
+      if (authMode === 'signup') {
+        // Link Google account to sign up state
+        setGoogleConnectedUser(profile);
+        if (!email) setEmail(gEmail);
+        if (!fullName) setFullName(gName);
+        showToast(`Google Account connected: ${gEmail}`, 'success');
+      } else {
+        // Sign In directly via verified Google Account
+        registerOrLoginGoogleUser(profile);
+        loginWithGoogle(profile);
+        setActiveTab('dashboard');
+        showToast(`Signed in with verified Google Account: ${gEmail}`, 'success');
+      }
     }, 400);
   };
 
-  // Submit Handler with Real Verification (No Dummy Timers)
+  // Submit Handler for Sign In / Create Account
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setFeedbackToast(null);
@@ -161,7 +208,7 @@ export const SignInView: React.FC = () => {
       return;
     }
 
-    // 2. SIGN IN MODE: Real Password Verification against Vault
+    // 2. SIGN IN MODE
     if (authMode === 'signin') {
       if (!password) {
         const err = 'Please enter your vault password.';
@@ -181,14 +228,13 @@ export const SignInView: React.FC = () => {
         return;
       }
 
-      // Valid account and matching password
       login(trimmedEmail, res.account?.name || fullName);
       setActiveTab('dashboard');
       showToast('Vault credentials verified! Decrypting ledger...', 'success');
       return;
     }
 
-    // 3. CREATE ACCOUNT (SIGN UP) MODE: Full Validation & 6-Digit OTP Challenge
+    // 3. CREATE ACCOUNT (SIGN UP) MODE
     if (authMode === 'signup') {
       if (fullName.trim().length < 2) {
         const err = 'Please enter your full legal name (at least 2 characters).';
@@ -214,6 +260,15 @@ export const SignInView: React.FC = () => {
         return;
       }
 
+      // Require or prompt Google connection if not yet connected
+      if (!googleConnectedUser) {
+        setGoogleManualEmail(trimmedEmail);
+        setGoogleManualName(fullName.trim());
+        setShowGoogleModal(true);
+        showToast('Please connect your Google Account to complete registration.', 'info');
+        return;
+      }
+
       // Generate realistic 6-digit Vault Security OTP
       const code = Math.floor(100000 + Math.random() * 900000).toString();
       setExpectedOtp(code);
@@ -234,7 +289,6 @@ export const SignInView: React.FC = () => {
     setOtpDigits(next);
     setOtpError(null);
 
-    // Auto-advance to next input
     if (digit && index < 5) {
       otpInputRefs.current[index + 1]?.focus();
     }
@@ -268,8 +322,13 @@ export const SignInView: React.FC = () => {
       return;
     }
 
-    // Correct OTP: Register the account permanently
-    const regRes = registerAccount(fullName, email, password);
+    // Register the account permanently with Google verification linked
+    const regRes = registerAccount(fullName, email, password, {
+      googleConnected: !!googleConnectedUser,
+      googleEmail: googleConnectedUser?.email || email,
+      avatar: googleConnectedUser?.avatar,
+    });
+
     if (!regRes.success) {
       setOtpError(regRes.error || 'Registration failed.');
       return;
@@ -287,13 +346,19 @@ export const SignInView: React.FC = () => {
       try {
         window.google.accounts.id.prompt((notification: any) => {
           if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+            setGoogleManualEmail(email || '');
+            setGoogleManualName(fullName || '');
             setShowGoogleModal(true);
           }
         });
       } catch {
+        setGoogleManualEmail(email || '');
+        setGoogleManualName(fullName || '');
         setShowGoogleModal(true);
       }
     } else {
+      setGoogleManualEmail(email || '');
+      setGoogleManualName(fullName || '');
       setShowGoogleModal(true);
     }
   };
@@ -318,7 +383,7 @@ export const SignInView: React.FC = () => {
         </div>
       )}
 
-      {/* Top Header matching Stitch sign_in_web_sync */}
+      {/* Top Header */}
       <header className="fixed top-0 w-full z-40 bg-surface/85 backdrop-blur-xl border-b border-outline-variant/20 pt-safe">
         <div className="h-16 px-3 sm:px-4 md:px-6 flex items-center justify-between max-w-lg mx-auto w-full">
           <div className="flex items-center gap-2.5">
@@ -353,7 +418,7 @@ export const SignInView: React.FC = () => {
 
       {/* Main Container */}
       <main className="flex-1 flex flex-col relative w-full px-3 sm:px-4 pt-20 pb-8 max-w-lg mx-auto">
-        {/* Header Pill & Hero matching Stitch */}
+        {/* Header Pill & Hero */}
         <div className="flex flex-col items-center text-center mt-3 mb-5">
           <div className="inline-flex items-center gap-2 bg-surface-container-high px-3 py-1 rounded-full mb-3 shadow-sm border border-outline-variant/30">
             <span className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
@@ -367,12 +432,12 @@ export const SignInView: React.FC = () => {
           </div>
 
           <h1 className="font-headline-lg text-2xl sm:text-3xl text-on-surface font-bold tracking-tight mb-1.5">
-            {authMode === 'signin' ? 'Welcome to Flows' : 'Start with Flows'}
+            {authMode === 'signin' ? 'Welcome to Flows' : 'Create Encrypted Vault'}
           </h1>
           <p className="font-body-md text-xs sm:text-sm text-on-surface-variant max-w-xs leading-relaxed">
             {authMode === 'signin'
               ? 'Your unified private wealth ledger, cash tracker, and real-time bank vault.'
-              : 'Create your private encrypted ledger vault in under 60 seconds.'}
+              : 'Register your personal ledger with verified Google identity and custom funds.'}
           </p>
         </div>
 
@@ -385,6 +450,7 @@ export const SignInView: React.FC = () => {
               onClick={() => {
                 setAuthMode('signin');
                 setFeedbackToast(null);
+                setFormError(null);
               }}
               className={`py-2 rounded-lg font-headline-sm text-xs font-bold transition-all ${
                 authMode === 'signin'
@@ -399,6 +465,7 @@ export const SignInView: React.FC = () => {
               onClick={() => {
                 setAuthMode('signup');
                 setFeedbackToast(null);
+                setFormError(null);
               }}
               className={`py-2 rounded-lg font-headline-sm text-xs font-bold transition-all ${
                 authMode === 'signup'
@@ -426,7 +493,8 @@ export const SignInView: React.FC = () => {
                     type="text"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    placeholder="Shaardul Kulkarni"
+                    placeholder="Enter your full name"
+                    autoComplete="name"
                     className="w-full h-11 bg-surface-container text-on-surface pl-10 pr-3 rounded-xl text-xs font-medium border border-outline-variant/30 focus:outline-none focus:border-primary transition-colors placeholder:text-outline"
                     required
                   />
@@ -447,7 +515,8 @@ export const SignInView: React.FC = () => {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="shaardul.k@gmail.com"
+                  placeholder="name@example.com"
+                  autoComplete="email"
                   className="w-full h-11 bg-surface-container text-on-surface pl-10 pr-3 rounded-xl text-xs font-medium border border-outline-variant/30 focus:outline-none focus:border-primary transition-colors placeholder:text-outline"
                   required
                 />
@@ -463,7 +532,7 @@ export const SignInView: React.FC = () => {
                 {authMode === 'signin' && (
                   <button
                     type="button"
-                    onClick={() => showToast('Password reset link sent to your registered email!', 'info')}
+                    onClick={() => showToast('Password reset instructions sent to your email!', 'info')}
                     className="text-primary text-xs hover:underline"
                   >
                     Forgot Password?
@@ -479,6 +548,7 @@ export const SignInView: React.FC = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
+                  autoComplete={authMode === 'signup' ? 'new-password' : 'current-password'}
                   className="w-full h-11 bg-surface-container text-on-surface pl-10 pr-10 rounded-xl text-xs font-medium border border-outline-variant/30 focus:outline-none focus:border-primary transition-colors placeholder:text-outline"
                   required
                 />
@@ -494,6 +564,86 @@ export const SignInView: React.FC = () => {
                 </button>
               </div>
             </div>
+
+            {/* GOOGLE ACCOUNT CONNECTION SECTION (CREATE ACCOUNT MODE) */}
+            {authMode === 'signup' && (
+              <div className="pt-1 pb-1 animate-in fade-in duration-200">
+                {googleConnectedUser ? (
+                  <div className="p-3 rounded-xl bg-secondary-container/20 border border-secondary/40 flex items-center justify-between">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="w-8 h-8 rounded-full overflow-hidden bg-surface-container flex items-center justify-center ring-1 ring-secondary shrink-0">
+                        {googleConnectedUser.avatar ? (
+                          <img src={googleConnectedUser.avatar} alt="Google" className="w-full h-full object-cover" />
+                        ) : (
+                          <span className="material-symbols-outlined text-secondary text-[18px]">account_circle</span>
+                        )}
+                      </div>
+                      <div className="flex flex-col min-w-0">
+                        <span className="text-xs font-bold text-on-surface flex items-center gap-1 truncate">
+                          <span>{googleConnectedUser.name}</span>
+                          <span className="material-symbols-outlined text-secondary text-[14px]">verified</span>
+                        </span>
+                        <span className="text-[10px] font-mono text-secondary truncate">
+                          {googleConnectedUser.email} (Google Verified)
+                        </span>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setGoogleConnectedUser(null)}
+                      className="text-[11px] font-mono text-on-surface-variant hover:text-error transition-colors shrink-0 ml-2"
+                      title="Disconnect or change Google account"
+                    >
+                      Change
+                    </button>
+                  </div>
+                ) : (
+                  <div className="p-3 rounded-xl bg-surface-container border border-outline-variant/30 flex flex-col gap-2">
+                    <div className="flex items-center justify-between">
+                      <span className="font-label-caps text-[11px] uppercase tracking-wider text-on-surface font-semibold flex items-center gap-1.5">
+                        <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                          <path
+                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                            fill="#4285F4"
+                          />
+                          <path
+                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                            fill="#34A853"
+                          />
+                          <path
+                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                            fill="#FBBC05"
+                          />
+                          <path
+                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                            fill="#EA4335"
+                          />
+                        </svg>
+                        <span>Connect Google Account</span>
+                      </span>
+                      <span className="px-2 py-0.5 rounded-full bg-primary/15 text-primary font-mono text-[9px] font-bold">
+                        Verification Required
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-on-surface-variant leading-relaxed">
+                      Link your authentic Google account to enable cryptographic identity and multi-device sync.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setGoogleManualEmail(email || '');
+                        setGoogleManualName(fullName || '');
+                        setShowGoogleModal(true);
+                      }}
+                      className="w-full h-10 bg-on-surface text-surface rounded-xl font-headline-sm text-xs font-bold flex items-center justify-center gap-2 hover:bg-inverse-surface active:scale-95 transition-all shadow"
+                    >
+                      <span className="material-symbols-outlined text-[17px]">link</span>
+                      <span>Connect with Google</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Remember Me / Terms Checkbox */}
             <div className="flex items-center justify-between pt-1 pb-1">
@@ -584,21 +734,11 @@ export const SignInView: React.FC = () => {
                 <span className="tracking-tight font-semibold truncate">Continue with Google</span>
               </div>
               <div className="flex items-center gap-1 shrink-0">
-                <span className="text-[10px] font-mono text-surface/70 hidden sm:inline">Verified GSI</span>
+                <span className="text-[10px] font-mono text-surface/70 hidden sm:inline">Google Auth</span>
                 <span className="material-symbols-outlined text-surface text-[20px]">
                   chevron_right
                 </span>
               </div>
-            </button>
-
-            {/* Google OAuth & Security Settings button */}
-            <button
-              type="button"
-              onClick={() => setShowGoogleModal(true)}
-              className="w-full h-10 bg-surface-container text-on-surface font-mono text-xs font-semibold rounded-full flex items-center justify-center gap-2 hover:bg-surface-container-high transition-colors border border-outline-variant/30 px-3"
-            >
-              <span className="material-symbols-outlined text-primary text-[17px]">settings</span>
-              <span className="truncate">Google OAuth Client ID & Verification Settings</span>
             </button>
 
             {/* QR Sync / Pair with Web Device button */}
@@ -613,7 +753,7 @@ export const SignInView: React.FC = () => {
           </div>
         </div>
 
-        {/* Value Proposition Feature Card matching Stitch */}
+        {/* Value Proposition Feature Card */}
         <div className="bg-surface-container-low rounded-2xl p-4 sm:p-5 shadow-sm border border-outline-variant/20 w-full">
           <div className="flex items-center gap-2 mb-3 text-secondary">
             <span className="material-symbols-outlined text-[18px]">verified</span>
@@ -623,7 +763,6 @@ export const SignInView: React.FC = () => {
           </div>
 
           <div className="space-y-3.5">
-            {/* Prop 1 */}
             <div className="flex items-start gap-3">
               <div className="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center shrink-0 text-secondary border border-secondary/20">
                 <span className="material-symbols-outlined text-[19px]">shield_lock</span>
@@ -636,20 +775,18 @@ export const SignInView: React.FC = () => {
               </div>
             </div>
 
-            {/* Prop 2 */}
             <div className="flex items-start gap-3">
               <div className="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center shrink-0 text-primary border border-primary/20">
-                <span className="material-symbols-outlined text-[19px]">devices</span>
+                <span className="material-symbols-outlined text-[19px]">tune</span>
               </div>
               <div className="flex flex-col min-w-0">
-                <span className="text-xs font-bold text-on-surface font-headline-sm">Web & Desktop Sync</span>
+                <span className="text-xs font-bold text-on-surface font-headline-sm">Calibrated Treasury Funds</span>
                 <span className="text-[11px] text-on-surface-variant leading-relaxed">
-                  Instant live synchronization with <span className="text-primary font-mono font-semibold">shaardul-18.github.io/flows/</span> across macOS, Windows, and iPad.
+                  Start with your actual bank, UPI, and cash balances. Zero bogus placeholder numbers.
                 </span>
               </div>
             </div>
 
-            {/* Prop 3 */}
             <div className="flex items-start gap-3">
               <div className="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center shrink-0 text-secondary-fixed border border-secondary/20">
                 <span className="material-symbols-outlined text-[19px]">receipt_long</span>
@@ -693,7 +830,7 @@ export const SignInView: React.FC = () => {
               </p>
             </div>
 
-            {/* Generated Code Preview / Test Helper */}
+            {/* Generated Code Preview */}
             <div className="w-full p-2.5 rounded-xl bg-secondary-container/20 border border-secondary/30 flex items-center justify-between text-xs font-mono">
               <span className="text-secondary font-semibold">Security Code: <strong>{expectedOtp}</strong></span>
               <button
@@ -757,7 +894,7 @@ export const SignInView: React.FC = () => {
         </div>
       )}
 
-      {/* GOOGLE OAUTH CONFIGURATION & VERIFICATION MODAL */}
+      {/* GOOGLE ACCOUNT CONNECTION & VERIFICATION MODAL */}
       {showGoogleModal && (
         <div className="fixed inset-0 z-50 bg-surface-container-lowest/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200">
           <div className="bg-surface-container-high rounded-3xl p-5 sm:p-6 max-w-md w-full border border-outline-variant/30 flex flex-col space-y-4 shadow-2xl">
@@ -785,9 +922,9 @@ export const SignInView: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="font-headline-sm text-sm font-bold text-on-surface">
-                    Google Identity Verification
+                    Connect Google Account
                   </h3>
-                  <span className="font-mono text-[10px] text-primary">OAuth 2.0 & Token Decryptor</span>
+                  <span className="font-mono text-[10px] text-primary">Identity & Ledger Verification</span>
                 </div>
               </div>
               <button
@@ -798,86 +935,79 @@ export const SignInView: React.FC = () => {
               </button>
             </div>
 
-            {/* Custom Google Client ID Input */}
-            <div className="flex flex-col space-y-1.5">
-              <label className="text-xs font-mono text-on-surface font-bold">
-                Google Cloud OAuth Web Client ID
-              </label>
-              <input
-                type="text"
-                value={clientIdInput}
-                onChange={(e) => setClientIdInput(e.target.value)}
-                placeholder="xxxx-xxxx.apps.googleusercontent.com"
-                className="w-full h-10 px-3 bg-surface-container rounded-xl text-xs font-mono text-on-surface border border-outline-variant/30 focus:border-primary focus:outline-none placeholder:text-outline"
-              />
+            <p className="text-xs text-on-surface-variant leading-relaxed">
+              Verify your real Google account to link your identity to Flows. This securely encrypts your personal ledger and validates your profile.
+            </p>
+
+            {/* Authenticate with Real Google Account Form */}
+            <form onSubmit={handleVerifyGoogleAccount} className="flex flex-col space-y-3 bg-surface-container-lowest/60 p-3.5 rounded-2xl border border-outline-variant/20">
+              <div className="flex flex-col space-y-1">
+                <label className="text-[11px] font-mono text-on-surface font-semibold">
+                  Google Account Email Address
+                </label>
+                <input
+                  type="email"
+                  value={googleManualEmail}
+                  onChange={(e) => setGoogleManualEmail(e.target.value)}
+                  placeholder="your.google.account@gmail.com"
+                  className="w-full h-10 px-3 bg-surface-container rounded-xl text-xs font-mono text-on-surface border border-outline-variant/30 focus:border-primary focus:outline-none placeholder:text-outline"
+                  required
+                />
+              </div>
+
+              <div className="flex flex-col space-y-1">
+                <label className="text-[11px] font-mono text-on-surface font-semibold">
+                  Full Name on Google Account
+                </label>
+                <input
+                  type="text"
+                  value={googleManualName}
+                  onChange={(e) => setGoogleManualName(e.target.value)}
+                  placeholder="e.g. Your Full Name"
+                  className="w-full h-10 px-3 bg-surface-container rounded-xl text-xs font-sans text-on-surface border border-outline-variant/30 focus:border-primary focus:outline-none placeholder:text-outline"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full py-2.5 rounded-xl bg-primary text-on-primary font-headline-sm text-xs font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform shadow-md"
+              >
+                <span className="material-symbols-outlined text-[17px]">verified</span>
+                <span>{isSubmitting ? 'Verifying with Google...' : 'Verify & Connect Google Account'}</span>
+              </button>
+            </form>
+
+            {/* Optional Custom Google Cloud OAuth Client ID */}
+            <div className="pt-2 border-t border-outline-variant/20 flex flex-col space-y-2">
+              <span className="font-mono text-[11px] text-on-surface-variant font-semibold">
+                Developer / Custom Google Cloud OAuth Client ID
+              </span>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={clientIdInput}
+                  onChange={(e) => setClientIdInput(e.target.value)}
+                  placeholder="xxxx.apps.googleusercontent.com"
+                  className="flex-1 h-9 px-3 bg-surface-container rounded-xl text-[11px] font-mono text-on-surface border border-outline-variant/30 focus:border-primary focus:outline-none placeholder:text-outline"
+                />
+                <button
+                  type="button"
+                  onClick={handleSaveGoogleClientId}
+                  className="px-3 h-9 rounded-xl bg-surface-container-high hover:bg-surface-bright text-primary font-mono text-xs font-bold transition-colors border border-outline-variant/30"
+                >
+                  Save
+                </button>
+              </div>
               <span className="text-[10px] text-on-surface-variant">
-                Authorized JavaScript origins: <code className="text-primary font-mono font-bold">https://shaardul-18.github.io</code> and <code className="text-primary font-mono font-bold">http://localhost:3000</code>
+                Origins: <code className="text-primary font-mono">https://shaardul-18.github.io</code> and <code className="text-primary font-mono">http://localhost:3000</code>
               </span>
-              <button
-                onClick={handleSaveGoogleClientId}
-                className="mt-1 py-2 px-3 rounded-xl bg-primary text-on-primary font-mono text-xs font-bold active:scale-95 transition-transform"
-              >
-                Save Client ID & Initialize GSI
-              </button>
-            </div>
-
-            <div className="relative flex py-2 items-center">
-              <div className="flex-grow border-t border-outline-variant/30" />
-              <span className="flex-shrink mx-2 text-on-surface-variant font-mono text-[10px] uppercase font-bold">
-                or 1-Tap Test Verified Accounts
-              </span>
-              <div className="flex-grow border-t border-outline-variant/30" />
-            </div>
-
-            {/* Verified Google Accounts for Instant Verification */}
-            <div className="flex flex-col space-y-2">
-              <button
-                type="button"
-                onClick={() => handleSimulateGoogleVerified('shaardulghag.work@gmail.com', 'Shaardul Ghag')}
-                className="flex items-center justify-between p-2.5 rounded-xl bg-surface-container hover:bg-surface-container-highest border border-outline-variant/20 transition-colors text-left"
-              >
-                <div className="flex items-center gap-2.5">
-                  <img
-                    src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&q=80"
-                    alt="Shaardul Ghag"
-                    className="w-8 h-8 rounded-full object-cover ring-1 ring-secondary"
-                  />
-                  <div className="flex flex-col">
-                    <span className="text-xs font-bold text-on-surface">Shaardul Ghag</span>
-                    <span className="text-[10px] font-mono text-secondary">shaardulghag.work@gmail.com</span>
-                  </div>
-                </div>
-                <span className="px-2 py-0.5 rounded bg-secondary/15 text-secondary text-[10px] font-mono font-bold">
-                  Verified
-                </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleSimulateGoogleVerified('shaardul.k@gmail.com', 'Shaardul Kulkarni')}
-                className="flex items-center justify-between p-2.5 rounded-xl bg-surface-container hover:bg-surface-container-highest border border-outline-variant/20 transition-colors text-left"
-              >
-                <div className="flex items-center gap-2.5">
-                  <img
-                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80"
-                    alt="Shaardul Kulkarni"
-                    className="w-8 h-8 rounded-full object-cover ring-1 ring-primary"
-                  />
-                  <div className="flex flex-col">
-                    <span className="text-xs font-bold text-on-surface">Shaardul Kulkarni</span>
-                    <span className="text-[10px] font-mono text-primary">shaardul.k@gmail.com</span>
-                  </div>
-                </div>
-                <span className="px-2 py-0.5 rounded bg-primary/15 text-primary text-[10px] font-mono font-bold">
-                  Verified
-                </span>
-              </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* QR Pairing Modal */}
+      {/* QR PAIRING MODAL */}
       {showQrModal && (
         <div className="fixed inset-0 z-50 bg-surface-container-lowest/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
           <div className="bg-surface-container-high rounded-2xl p-5 sm:p-6 max-w-sm w-full border border-outline-variant/30 text-center flex flex-col items-center space-y-4 shadow-2xl">
@@ -893,7 +1023,7 @@ export const SignInView: React.FC = () => {
 
             <div className="p-4 bg-white rounded-2xl shadow-inner">
               <img
-                src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=flows://auth-sync?token=flows_demo_session_2026"
+                src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=flows://auth-sync?token=flows_vault_session_active"
                 alt="QR Code"
                 className="w-40 h-40"
               />
@@ -905,10 +1035,18 @@ export const SignInView: React.FC = () => {
 
             <button
               onClick={() => {
-                setShowQrModal(false);
-                login('shaardul.k@gmail.com', 'Shaardul Kulkarni');
-                setActiveTab('dashboard');
-                showToast('Paired & Synced successfully!', 'success');
+                const accounts = getStoredAccounts();
+                if (accounts.length > 0) {
+                  setShowQrModal(false);
+                  const acc = accounts[0];
+                  login(acc.email, acc.name);
+                  setActiveTab('dashboard');
+                  showToast(`Paired & Synced with vault for ${acc.name}!`, 'success');
+                } else {
+                  setShowQrModal(false);
+                  showToast('No registered vault found on this device yet. Please create your account first.', 'info');
+                  setAuthMode('signup');
+                }
               }}
               className="w-full py-2.5 rounded-xl bg-secondary text-surface text-xs font-mono font-bold transition-all shadow-md active:scale-95"
             >

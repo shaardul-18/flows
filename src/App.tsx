@@ -13,15 +13,24 @@ import { LogCashModal } from './components/modals/LogCashModal';
 import { CreateSplitModal } from './components/modals/CreateSplitModal';
 import { ExportModal } from './components/modals/ExportModal';
 import { InstallAppModal } from './components/modals/InstallAppModal';
+import { TreasurySetupModal } from './components/modals/TreasurySetupModal';
 import { SignInView } from './components/auth/SignInView';
 
 export const App: React.FC = () => {
-  const { activeTab, setActiveTab, isDesktopMode, isAuthenticated } = useApp();
+  const { activeTab, setActiveTab, isDesktopMode, isAuthenticated, treasurySettings } = useApp();
 
   const [isLogCashOpen, setIsLogCashOpen] = useState(false);
   const [isCreateSplitOpen, setIsCreateSplitOpen] = useState(false);
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [isInstallOpen, setIsInstallOpen] = useState(false);
+  const [isTreasuryOpen, setIsTreasuryOpen] = useState(false);
+
+  // Automatically trigger Treasury setup wizard for newly registered users
+  React.useEffect(() => {
+    if (isAuthenticated && !treasurySettings.isSetupComplete) {
+      setIsTreasuryOpen(true);
+    }
+  }, [isAuthenticated, treasurySettings.isSetupComplete]);
 
   React.useEffect(() => {
     const handleHash = () => {
@@ -51,11 +60,13 @@ export const App: React.FC = () => {
             onOpenLogCash={() => setIsLogCashOpen(true)}
             onOpenNewSplit={() => setIsCreateSplitOpen(true)}
             onOpenExport={() => setIsExportOpen(true)}
+            onOpenTreasury={() => setIsTreasuryOpen(true)}
           />
         ) : (
           <DashboardView
             onOpenLogCash={() => setIsLogCashOpen(true)}
             onOpenNewSplit={() => setIsCreateSplitOpen(true)}
+            onOpenTreasury={() => setIsTreasuryOpen(true)}
           />
         );
       case 'splits':
@@ -141,6 +152,10 @@ export const App: React.FC = () => {
       <InstallAppModal
         isOpen={isInstallOpen}
         onClose={() => setIsInstallOpen(false)}
+      />
+      <TreasurySetupModal
+        isOpen={isTreasuryOpen}
+        onClose={() => setIsTreasuryOpen(false)}
       />
     </div>
   );

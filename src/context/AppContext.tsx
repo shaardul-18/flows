@@ -5,10 +5,12 @@ import {
   Settlement,
   SimplifiedDebt,
   SplitMethod,
+  TreasurySettings,
   User,
 } from '../types';
 import { INITIAL_EXPENSES, INITIAL_GROUPS, INITIAL_SETTLEMENTS, INITIAL_USERS } from '../data/mockData';
 import { calculateEqualSplit, simplifyDebts, toPaisa, fromPaisa } from '../utils/math';
+import { purgeLegacyBogusData } from '../utils/auth';
 
 interface AppContextType {
   currentUser: User;
@@ -32,6 +34,13 @@ interface AppContextType {
   login: (email: string, name?: string) => void;
   loginWithGoogle: (profile: { email: string; name: string; avatar?: string }) => void;
   logout: () => void;
+
+  // Real Treasury Settings & Dynamic Balances
+  treasurySettings: TreasurySettings;
+  updateTreasurySettings: (settings: Partial<TreasurySettings>) => void;
+  totalAvailableTreasury: number;
+  totalBankBalance: number;
+  totalCashBalance: number;
   
   // Actions
   addExpense: (expense: Omit<Expense, 'id' | 'date'> & { date?: string }) => Expense;
@@ -66,9 +75,23 @@ const STORAGE_KEYS = {
   DESKTOP_MODE: 'flows_desktop_mode_v1',
   AUTH: 'flows_auth_v1',
   INSTALLED: 'flows_app_installed',
+  TREASURY: 'flows_treasury_settings_v1',
+};
+
+const DEFAULT_TREASURY_SETTINGS: TreasurySettings = {
+  bankBalance: 0,
+  cashBalance: 0,
+  monthlyBudget: 0,
+  upiId: '',
+  isSetupComplete: false,
 };
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Purge legacy bogus data on startup
+  if (typeof window !== 'undefined') {
+    purgeLegacyBogusData();
+  }
+
   const [users, setUsers] = useState<User[]>(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.USERS);
     return saved ? JSON.parse(saved) : INITIAL_USERS;
@@ -89,8 +112,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return saved ? JSON.parse(saved) : INITIAL_SETTLEMENTS;
   });
 
+  const [treasurySettings, setTreasurySettings] = useState<TreasurySettings>(() => {
+    const saved = localStorage.getItem(STORAGE_KEYS.TREASURY);
+    return saved ? JSON.parse(saved) : DEFAULT_TREASURY_SETTINGS;
+  });
+
   const [activeTab, setActiveTab] = useState<string>('dashboard');
-  const [selectedExpenseForSplit, setSelectedExpenseForSplit] = useState<Expense | null>(INITIAL_EXPENSES[0]);
+  const [selectedExpenseForSplit, setSelectedExpenseForSplit] = useState<Expense | null>(null);
   const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
 
   // Desktop mode: ALWAYS false on mobile screens (<1024px) to prevent layout blowouts
@@ -102,7 +130,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return saved ? JSON.parse(saved) : (typeof window !== 'undefined' && window.innerWidth >= 1024);
   });
 
-  // App Installed Detection (Capacitor Android native, Android WebView, PWA standalone, iOS or manual install)
+  // App Installed Detection
   const [isAppInstalled, setIsAppInstalled] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false;
     
@@ -135,7 +163,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [isBalanceHidden, setIsBalanceHidden] = useState<boolean>(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.AUTH);
-    return saved !== null ? JSON.parse(saved) : true;
+    return saved !== null ? JSON.parse(saved) : false;
   });
 
   // Auto-adapt if user resizes or rotates phone
@@ -182,31 +210,78 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localStorage.setItem(STORAGE_KEYS.INSTALLED, JSON.stringify(val));
   };
 
+  const updateTreasurySettings = (settings: Partial<TreasurySettings>) => {
+    setTreasurySettings((prev) => {
+      const updated = { ...prev, ...settings };
+      localStorage.setItem(STORAGE_KEYS.TREASURY, JSON.stringify(updated));
+      return updated;
+    });
+  };
+
   const login = (email: string, name?: string) => {
     setIsAuthenticated(true);
     localStorage.setItem(STORAGE_KEYS.AUTH, JSON.stringify(true));
-    if (name) {
-      setUsers((prev) =>
-        prev.map((u) => (u.isCurrentUser ? { ...u, name, email } : u))
-      );
-    }
+    const trimmedEmail = email.trim().toLowerCase();
+    const displayName = name || 'User';
+
+    setUsers((prev) => {
+      const existingIdx = prev.findIndex((u) => u.email.toLowerCase() === trimmedEmail);
+      if (existingIdx !== -1) {
+        return prev.map((u, i) =>
+          i === existingIdx
+            ? { ...u, name: displayName, isCurrentUser: true }
+            : { ...u, isCurrentUser: false }
+        );
+      }
+      const newUser: User = {
+        id: `user-${Date.now()}`,
+        name: displayName,
+        email: trimmedEmail,
+        avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(displayName)}`,
+        initials: displayName.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase(),
+        upiId: treasurySettings.upiId || '',
+        isCurrentUser: true,
+      };
+      return [newUser, ...prev.map((u) => ({ ...u, isCurrentUser: false }))];
+    });
   };
 
   const loginWithGoogle = (googleProfile: { email: string; name: string; avatar?: string }) => {
     setIsAuthenticated(true);
     localStorage.setItem(STORAGE_KEYS.AUTH, JSON.stringify(true));
-    setUsers((prev) =>
-      prev.map((u) =>
-        u.isCurrentUser
-          ? {
-              ...u,
-              name: googleProfile.name,
-              email: googleProfile.email,
-              avatar: googleProfile.avatar || u.avatar,
-            }
-          : u
-      )
-    );
+    const trimmedEmail = googleProfile.email.trim().toLowerCase();
+
+    setUsers((prev) => {
+      const existingIdx = prev.findIndex((u) => u.email.toLowerCase() === trimmedEmail);
+      if (existingIdx !== -1) {
+        return prev.map((u, i) =>
+          i === existingIdx
+            ? {
+                ...u,
+                name: googleProfile.name,
+                avatar: googleProfile.avatar || u.avatar,
+                googleConnected: true,
+                googleEmail: trimmedEmail,
+                isCurrentUser: true,
+              }
+            : { ...u, isCurrentUser: false }
+        );
+      }
+      const newUser: User = {
+        id: `user-${Date.now()}`,
+        name: googleProfile.name,
+        email: trimmedEmail,
+        avatar:
+          googleProfile.avatar ||
+          `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(googleProfile.name)}`,
+        initials: googleProfile.name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase(),
+        upiId: treasurySettings.upiId || '',
+        isCurrentUser: true,
+        googleConnected: true,
+        googleEmail: trimmedEmail,
+      };
+      return [newUser, ...prev.map((u) => ({ ...u, isCurrentUser: false }))];
+    });
   };
 
   const logout = () => {
@@ -235,9 +310,23 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localStorage.setItem(STORAGE_KEYS.DESKTOP_MODE, JSON.stringify(isDesktopMode));
   }, [isDesktopMode]);
 
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.TREASURY, JSON.stringify(treasurySettings));
+  }, [treasurySettings]);
+
   const currentUser = useMemo(() => {
-    return users.find((u) => u.isCurrentUser) || users[0];
-  }, [users]);
+    const found = users.find((u) => u.isCurrentUser) || users[0];
+    if (found) return found;
+    return {
+      id: 'guest',
+      name: 'Flows User',
+      email: '',
+      avatar: 'https://api.dicebear.com/7.x/initials/svg?seed=Flows',
+      initials: 'FU',
+      upiId: treasurySettings.upiId || '',
+      isCurrentUser: true,
+    };
+  }, [users, treasurySettings.upiId]);
 
   const toggleBalanceVisibility = () => {
     setIsBalanceHidden((prev) => !prev);
@@ -249,87 +338,83 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const date = newExpData.date || new Date().toISOString();
     const isMicroLeak = newExpData.amount <= 200 || newExpData.category === 'Micro-Leak';
 
-    const completeExpense: Expense = {
+    const newExpense: Expense = {
       ...newExpData,
       id,
       date,
-      isMicroLeak: newExpData.isMicroLeak ?? isMicroLeak,
+      isMicroLeak,
     };
 
-    setExpenses((prev) => [completeExpense, ...prev]);
-    return completeExpense;
+    setExpenses((prev) => [newExpense, ...prev]);
+    return newExpense;
   };
 
-  // Update expense
   const updateExpense = (id: string, updates: Partial<Expense>) => {
     setExpenses((prev) =>
       prev.map((exp) => (exp.id === id ? { ...exp, ...updates } : exp))
     );
-    if (selectedExpenseForSplit?.id === id) {
-      setSelectedExpenseForSplit((prev) => (prev ? { ...prev, ...updates } : null));
-    }
   };
 
-  // Delete expense
   const deleteExpense = (id: string) => {
     setExpenses((prev) => prev.filter((exp) => exp.id !== id));
-    if (selectedExpenseForSplit?.id === id) {
-      setSelectedExpenseForSplit(null);
-    }
   };
 
-  // Settle individual expense share
   const settleExpenseShare = (expenseId: string, memberId: string) => {
     setExpenses((prev) =>
       prev.map((exp) => {
         if (exp.id !== expenseId) return exp;
-        const newSplits = exp.splits.map((s) =>
+        const updatedSplits = exp.splits.map((s) =>
           s.memberId === memberId
             ? { ...s, isSettled: true, settledAt: new Date().toISOString() }
             : s
         );
-        const allSettled = newSplits.every((s) => s.isSettled);
+        const allSettled = updatedSplits.every((s) => s.isSettled);
         return {
           ...exp,
-          splits: newSplits,
-          status: allSettled ? 'settled' : exp.status,
+          splits: updatedSplits,
+          status: allSettled ? 'settled' : 'pending',
         };
       })
     );
   };
 
-  // Record a peer settlement
-  const recordSettlement = (settlementData: Omit<Settlement, 'id' | 'date'>) => {
+  const recordSettlement = (data: Omit<Settlement, 'id' | 'date'>) => {
+    const id = `stl-${Date.now()}`;
+    const date = new Date().toISOString();
     const newSettlement: Settlement = {
-      ...settlementData,
-      id: `settle-${Date.now()}`,
-      date: new Date().toISOString(),
+      ...data,
+      id,
+      date,
     };
 
     setSettlements((prev) => [newSettlement, ...prev]);
 
-    // Automatically mark matching pending splits between these two members as settled
+    // Also mark corresponding expenses as settled if exact match
     setExpenses((prev) =>
       prev.map((exp) => {
-        if (exp.payerId === settlementData.toMemberId) {
-          const updatedSplits = exp.splits.map((s) => {
-            if (s.memberId === settlementData.fromMemberId && !s.isSettled) {
-              return { ...s, isSettled: true, settledAt: new Date().toISOString() };
-            }
-            return s;
-          });
-          const allSettled = updatedSplits.every((s) => s.isSettled);
-          return { ...exp, splits: updatedSplits, status: allSettled ? 'settled' : exp.status };
+        if (exp.payerId === data.toMemberId) {
+          const split = exp.splits.find((s) => s.memberId === data.fromMemberId && !s.isSettled);
+          if (split && split.amount <= data.amount) {
+            const updatedSplits = exp.splits.map((s) =>
+              s.memberId === data.fromMemberId
+                ? { ...s, isSettled: true, settledAt: date }
+                : s
+            );
+            return {
+              ...exp,
+              splits: updatedSplits,
+              status: updatedSplits.every((s) => s.isSettled) ? 'settled' : 'pending',
+            };
+          }
         }
         return exp;
       })
     );
   };
 
-  // Add group
-  const addGroup = (groupData: Omit<Group, 'id' | 'createdAt'>): Group => {
+  const addGroup = (data: Omit<Group, 'id' | 'createdAt'>) => {
     const newGroup: Group = {
-      ...groupData,
+      ...data,
       id: `group-${Date.now()}`,
       createdAt: new Date().toISOString().split('T')[0],
     };
@@ -337,77 +422,74 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return newGroup;
   };
 
-  // Add contact user
-  const addUser = (userData: Omit<User, 'id' | 'initials'>): User => {
+  const addUser = (userData: Omit<User, 'id' | 'initials'>) => {
+    const id = `user-${Date.now()}`;
     const initials = userData.name
       .split(' ')
       .map((n) => n[0])
       .join('')
-      .toUpperCase()
-      .slice(0, 2);
+      .slice(0, 2)
+      .toUpperCase();
 
     const newUser: User = {
       ...userData,
-      id: `user-${Date.now()}`,
+      id,
       initials,
     };
+
     setUsers((prev) => [...prev, newUser]);
     return newUser;
   };
 
-  // Reset to initial
   const resetAllData = () => {
     localStorage.clear();
-    setUsers(INITIAL_USERS);
-    setGroups(INITIAL_GROUPS);
-    setExpenses(INITIAL_EXPENSES);
-    setSettlements(INITIAL_SETTLEMENTS);
-    setSelectedExpenseForSplit(INITIAL_EXPENSES[0]);
+    setUsers([]);
+    setGroups([]);
+    setExpenses([]);
+    setSettlements([]);
+    setTreasurySettings(DEFAULT_TREASURY_SETTINGS);
+    setIsAuthenticated(false);
   };
 
-  // Computed: Real-time net balances
+  // Dynamic Peer Balances & Debt Simplification
   const { totalYouAreOwed, totalYouOwe, peerBalances } = useMemo(() => {
     let owedToYouPaisa = 0;
     let youOwePaisa = 0;
-    const peerBalanceMap: Record<string, number> = {}; // in paisa: >0 means peer owes currentUser
+    const peerBalanceMap: Record<string, number> = {};
 
     users.forEach((u) => {
-      if (u.id !== currentUser.id) {
-        peerBalanceMap[u.id] = 0;
-      }
+      peerBalanceMap[u.id] = 0;
     });
 
     expenses.forEach((exp) => {
       if (exp.status === 'settled') return;
 
-      const payerIsCurrent = exp.payerId === currentUser.id;
+      const payerId = exp.payerId;
+      const isCurrentUserPayer = payerId === currentUser.id;
 
       exp.splits.forEach((split) => {
         if (split.isSettled) return;
+        const memberId = split.memberId;
+        const amountPaisa = toPaisa(split.amount);
 
-        if (payerIsCurrent && split.memberId !== currentUser.id) {
-          // Others owe currentUser
-          const sharePaisa = toPaisa(split.amount);
-          owedToYouPaisa += sharePaisa;
-          peerBalanceMap[split.memberId] = (peerBalanceMap[split.memberId] || 0) + sharePaisa;
-        } else if (!payerIsCurrent && split.memberId === currentUser.id) {
-          // CurrentUser owes the payer
-          const sharePaisa = toPaisa(split.amount);
-          youOwePaisa += sharePaisa;
-          peerBalanceMap[exp.payerId] = (peerBalanceMap[exp.payerId] || 0) - sharePaisa;
+        if (payerId === memberId) return;
+
+        if (isCurrentUserPayer) {
+          owedToYouPaisa += amountPaisa;
+          peerBalanceMap[memberId] = (peerBalanceMap[memberId] || 0) + amountPaisa;
+        } else if (memberId === currentUser.id) {
+          youOwePaisa += amountPaisa;
+          peerBalanceMap[payerId] = (peerBalanceMap[payerId] || 0) - amountPaisa;
+        } else {
+          peerBalanceMap[memberId] = (peerBalanceMap[memberId] || 0) + amountPaisa;
+          peerBalanceMap[payerId] = (peerBalanceMap[payerId] || 0) - amountPaisa;
         }
       });
     });
 
-    // Account for direct settlements
     settlements.forEach((s) => {
-      if (!s.isConfirmed) return;
       const amountPaisa = toPaisa(s.amount);
-      if (s.toMemberId === currentUser.id && s.fromMemberId !== currentUser.id) {
-        // Someone paid currentUser
-        peerBalanceMap[s.fromMemberId] = (peerBalanceMap[s.fromMemberId] || 0) - amountPaisa;
-      } else if (s.fromMemberId === currentUser.id && s.toMemberId !== currentUser.id) {
-        // CurrentUser paid someone
+      if (s.fromMemberId === currentUser.id) {
         peerBalanceMap[s.toMemberId] = (peerBalanceMap[s.toMemberId] || 0) + amountPaisa;
       }
     });
@@ -428,13 +510,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return totalYouAreOwed - totalYouOwe;
   }, [totalYouAreOwed, totalYouOwe]);
 
-  // Computed simplified debts
   const simplifiedDebts = useMemo(() => {
     const allUserIds = users.map((u) => u.id);
     return simplifyDebts(allUserIds, peerBalances);
   }, [users, peerBalances]);
 
-  // Micro-leaks detection
   const microLeaks = useMemo(() => {
     return expenses.filter(
       (exp) => exp.payerId === currentUser.id && (exp.isMicroLeak || exp.amount <= 200)
@@ -445,19 +525,55 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return microLeaks.reduce((sum, exp) => sum + exp.amount, 0);
   }, [microLeaks]);
 
-  // Monthly budget
-  const monthlyBudget = 50000;
+  // Real Dynamic Treasury Calculations based on User's Actual Starting Funds
+  const totalBankExpenses = useMemo(() => {
+    return expenses
+      .filter((exp) => exp.payerId === currentUser.id && exp.paymentRail !== 'CASH')
+      .reduce((sum, exp) => sum + exp.amount, 0);
+  }, [expenses, currentUser.id]);
+
+  const totalBankSettlementsReceived = useMemo(() => {
+    return settlements
+      .filter((s) => s.toMemberId === currentUser.id && s.paymentRail !== 'CASH')
+      .reduce((sum, s) => sum + s.amount, 0);
+  }, [settlements, currentUser.id]);
+
+  const totalBankBalance = useMemo(() => {
+    const base = treasurySettings.bankBalance || 0;
+    return Math.max(0, base - totalBankExpenses + totalBankSettlementsReceived);
+  }, [treasurySettings.bankBalance, totalBankExpenses, totalBankSettlementsReceived]);
+
+  const totalCashExpenses = useMemo(() => {
+    return expenses
+      .filter((exp) => exp.payerId === currentUser.id && exp.paymentRail === 'CASH')
+      .reduce((sum, exp) => sum + exp.amount, 0);
+  }, [expenses, currentUser.id]);
+
+  const totalCashSettlementsReceived = useMemo(() => {
+    return settlements
+      .filter((s) => s.toMemberId === currentUser.id && s.paymentRail === 'CASH')
+      .reduce((sum, s) => sum + s.amount, 0);
+  }, [settlements, currentUser.id]);
+
+  const totalCashBalance = useMemo(() => {
+    const base = treasurySettings.cashBalance || 0;
+    return Math.max(0, base - totalCashExpenses + totalCashSettlementsReceived);
+  }, [treasurySettings.cashBalance, totalCashExpenses, totalCashSettlementsReceived]);
+
+  const totalAvailableTreasury = useMemo(() => {
+    return totalBankBalance + totalCashBalance;
+  }, [totalBankBalance, totalCashBalance]);
+
+  const monthlyBudget = treasurySettings.monthlyBudget || 0;
   const monthlySpent = useMemo(() => {
-    // Current month expenses paid by currentUser
     return expenses
       .filter((exp) => exp.payerId === currentUser.id)
       .reduce((sum, exp) => {
-        // Find current user's personal share
         const mySplit = exp.splits.find((s) => s.memberId === currentUser.id);
         const myAmount = mySplit ? mySplit.amount : exp.amount;
         return sum + myAmount;
       }, 0);
-  }, [expenses, currentUser]);
+  }, [expenses, currentUser.id]);
 
   const monthlyRemaining = Math.max(0, monthlyBudget - monthlySpent);
 
@@ -485,6 +601,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         login,
         loginWithGoogle,
         logout,
+        treasurySettings,
+        updateTreasurySettings,
+        totalAvailableTreasury,
+        totalBankBalance,
+        totalCashBalance,
         addExpense,
         updateExpense,
         deleteExpense,
