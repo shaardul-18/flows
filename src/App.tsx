@@ -115,6 +115,7 @@ export const App: React.FC = () => {
               title="Flows"
               subtitle={getSubtitle()}
               onOpenInstall={() => setIsInstallOpen(true)}
+              onOpenTreasury={() => setIsTreasuryOpen(true)}
             />
             <main className="flex-1 w-full pt-20 px-4 sm:px-6 md:px-8 max-w-7xl mx-auto overflow-x-hidden">
               {renderContent()}
@@ -128,6 +129,7 @@ export const App: React.FC = () => {
             title="Flows"
             subtitle={getSubtitle()}
             onOpenInstall={() => setIsInstallOpen(true)}
+            onOpenTreasury={() => setIsTreasuryOpen(true)}
           />
           <main className="flex-1 w-full pt-20 pb-24 px-3 sm:px-4 max-w-2xl mx-auto overflow-x-hidden">
             {renderContent()}

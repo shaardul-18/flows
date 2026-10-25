@@ -1,18 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useApp } from '../../context/AppContext';
 
 interface HeaderProps {
   title?: string;
   subtitle?: string;
   onOpenInstall?: () => void;
+  onOpenTreasury?: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ title = 'Flows', subtitle = 'Home', onOpenInstall }) => {
+export const Header: React.FC<HeaderProps> = ({ title = 'Flows', subtitle = 'Home', onOpenInstall, onOpenTreasury }) => {
   const { currentUser, isDesktopMode, setIsDesktopMode, logout, setActiveTab, isAppInstalled, setAppInstalled } = useApp();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Close profile dropdown when clicking outside
+  useEffect(() => {
+    const handleDocumentClick = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setShowProfileMenu(false);
+      }
+    };
+    if (showProfileMenu) {
+      document.addEventListener('mousedown', handleDocumentClick);
+    }
+    return () => document.removeEventListener('mousedown', handleDocumentClick);
+  }, [showProfileMenu]);
 
   return (
-    <header className={`fixed top-0 right-0 z-40 bg-surface/85 backdrop-blur-xl border-b border-outline-variant/20 pt-safe w-full max-w-full overflow-hidden ${isDesktopMode ? 'lg:left-72' : 'left-0'}`}>
+    <header className={`fixed top-0 right-0 z-40 bg-surface/85 backdrop-blur-xl border-b border-outline-variant/20 pt-safe w-full max-w-full overflow-visible ${isDesktopMode ? 'lg:left-72' : 'left-0'}`}>
       <div className="h-16 px-3 sm:px-4 md:px-6 flex items-center justify-between max-w-7xl mx-auto w-full">
         {/* Brand Logo & Context */}
         <div className="flex items-center gap-2 sm:gap-3 min-w-0 shrink">
@@ -104,10 +119,10 @@ export const Header: React.FC<HeaderProps> = ({ title = 'Flows', subtitle = 'Hom
           </button>
 
           {/* User Profile with Dropdown Menu */}
-          <div className="relative">
+          <div className="relative" ref={menuRef}>
             <button
-              onClick={() => setShowProfileMenu(!showProfileMenu)}
-              className="flex items-center gap-1.5 p-1 rounded-full hover:bg-surface-container transition-colors"
+              onClick={() => setShowProfileMenu((prev) => !prev)}
+              className="flex items-center gap-1.5 p-1 rounded-full hover:bg-surface-container transition-colors active:scale-95"
               title="User Account"
             >
               <div className="relative">
@@ -124,62 +139,96 @@ export const Header: React.FC<HeaderProps> = ({ title = 'Flows', subtitle = 'Hom
             </button>
 
             {showProfileMenu && (
-              <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-surface-container-high p-3 shadow-2xl border border-outline-variant/30 flex flex-col gap-2 z-50 animate-in fade-in duration-150">
-                <div className="flex items-center gap-2.5 pb-2 border-b border-outline-variant/20">
-                  <img
-                    src={currentUser.avatar}
-                    alt={currentUser.name}
-                    className="w-9 h-9 rounded-full object-cover"
-                  />
-                  <div className="flex flex-col min-w-0">
-                    <span className="text-xs font-bold text-on-surface truncate">
-                      {currentUser.name}
-                    </span>
-                    <span className="text-[10px] font-mono text-on-surface-variant truncate">
-                      {currentUser.email}
-                    </span>
+              <>
+                {/* Backdrop on mobile */}
+                <div
+                  className="fixed inset-0 z-40 bg-black/40 backdrop-blur-xs sm:hidden"
+                  onClick={() => setShowProfileMenu(false)}
+                />
+                <div className="absolute right-0 top-full mt-2 w-64 rounded-2xl bg-surface-container-high p-3.5 shadow-2xl border border-outline-variant/30 flex flex-col gap-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                  <div className="flex items-center gap-3 pb-3 border-b border-outline-variant/20">
+                    <img
+                      src={currentUser.avatar}
+                      alt={currentUser.name}
+                      className="w-10 h-10 rounded-full object-cover ring-2 ring-secondary/50 shrink-0"
+                    />
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-xs font-bold text-on-surface truncate flex items-center gap-1">
+                        <span>{currentUser.name}</span>
+                        {currentUser.googleConnected && (
+                          <span className="material-symbols-outlined text-secondary text-[14px]" title="Google Verified">
+                            verified
+                          </span>
+                        )}
+                      </span>
+                      <span className="text-[11px] font-mono text-on-surface-variant truncate">
+                        {currentUser.email}
+                      </span>
+                      {currentUser.googleConnected && (
+                        <span className="text-[9px] font-mono text-secondary font-bold flex items-center gap-1 mt-0.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-secondary" />
+                          Google Verified
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-1 text-xs pt-1">
+                    {onOpenTreasury && (
+                      <button
+                        onClick={() => {
+                          setShowProfileMenu(false);
+                          onOpenTreasury();
+                        }}
+                        className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-left text-on-surface hover:bg-surface-container hover:text-primary transition-colors font-medium"
+                      >
+                        <span className="material-symbols-outlined text-[18px] text-primary">tune</span>
+                        <span>Calibrate Treasury Funds</span>
+                      </button>
+                    )}
+
+                    <button
+                      onClick={() => {
+                        setIsDesktopMode(!isDesktopMode);
+                        setShowProfileMenu(false);
+                      }}
+                      className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-left text-on-surface hover:bg-surface-container hover:text-secondary transition-colors font-medium"
+                    >
+                      <span className="material-symbols-outlined text-[18px] text-secondary">
+                        {isDesktopMode ? 'smartphone' : 'desktop_windows'}
+                      </span>
+                      <span>{isDesktopMode ? 'Switch to Mobile View' : 'Switch to Desktop Ledger'}</span>
+                    </button>
+
+                    {onOpenInstall && !isAppInstalled && (
+                      <button
+                        onClick={() => {
+                          setShowProfileMenu(false);
+                          onOpenInstall();
+                        }}
+                        className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-left text-on-surface hover:bg-surface-container hover:text-secondary transition-colors font-medium"
+                      >
+                        <span className="material-symbols-outlined text-[18px] text-secondary">install_mobile</span>
+                        <span>Install App on Phone</span>
+                      </button>
+                    )}
+
+                    <div className="my-1 border-t border-outline-variant/20" />
+
+                    <button
+                      onClick={() => {
+                        setShowProfileMenu(false);
+                        setActiveTab('login');
+                        logout();
+                      }}
+                      className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-left text-error hover:bg-error/10 transition-colors font-medium"
+                    >
+                      <span className="material-symbols-outlined text-[18px]">lock</span>
+                      <span>Lock Vault & Sign Out</span>
+                    </button>
                   </div>
                 </div>
-
-                <div className="flex flex-col gap-1 text-xs">
-                  <button
-                    onClick={() => {
-                      setAppInstalled(!isAppInstalled);
-                      setShowProfileMenu(false);
-                    }}
-                    className="flex items-center gap-2 px-2.5 py-2 rounded-xl text-left text-on-surface hover:bg-surface-container hover:text-secondary transition-colors font-medium"
-                  >
-                    <span className="material-symbols-outlined text-[18px]">
-                      {isAppInstalled ? 'check_circle' : 'install_mobile'}
-                    </span>
-                    <span>
-                      {isAppInstalled ? 'App Status: Installed' : 'Mark App as Installed'}
-                    </span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setShowProfileMenu(false);
-                      logout();
-                    }}
-                    className="flex items-center gap-2 px-2.5 py-2 rounded-xl text-left text-on-surface hover:bg-surface-container hover:text-secondary transition-colors font-medium"
-                  >
-                    <span className="material-symbols-outlined text-[18px]">lock</span>
-                    <span>Lock Vault & Sign Out</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setShowProfileMenu(false);
-                      logout();
-                    }}
-                    className="flex items-center gap-2 px-2.5 py-2 rounded-xl text-left text-on-surface hover:bg-surface-container hover:text-primary transition-colors font-medium"
-                  >
-                    <span className="material-symbols-outlined text-[18px]">switch_account</span>
-                    <span>Switch User / Login</span>
-                  </button>
-                </div>
-              </div>
+              </>
             )}
           </div>
         </div>
