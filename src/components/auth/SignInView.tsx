@@ -13,6 +13,7 @@ import {
   getSupabaseConfig,
   setSupabaseConfig,
   signInWithGoogleOAuth,
+  getSupabaseProjectId,
 } from '../../utils/supabase';
 
 declare global {
@@ -48,6 +49,7 @@ export const SignInView: React.FC = () => {
 
   // Supabase Google OAuth Modal
   const [showSupabaseModal, setShowSupabaseModal] = useState(false);
+  const [showEnableGoogleGuideModal, setShowEnableGoogleGuideModal] = useState(false);
   const initialSupabaseConfig = getSupabaseConfig();
   const [supabaseUrlInput, setSupabaseUrlInput] = useState(initialSupabaseConfig.url);
   const [supabaseAnonKeyInput, setSupabaseAnonKeyInput] = useState(initialSupabaseConfig.anonKey);
@@ -86,8 +88,12 @@ export const SignInView: React.FC = () => {
     setIsSubmitting(false);
 
     if (!res.success) {
-      showToast(res.error || 'Failed to open Google Sign-In.', 'error');
-      setShowSupabaseModal(true);
+      if (res.providerNotEnabled) {
+        setShowEnableGoogleGuideModal(true);
+      } else {
+        showToast(res.error || 'Failed to open Google Sign-In.', 'error');
+        setShowSupabaseModal(true);
+      }
     }
   };
 
@@ -114,8 +120,12 @@ export const SignInView: React.FC = () => {
     setIsSubmitting(false);
 
     if (!res.success) {
-      showToast(res.error || 'Google OAuth failed. Ensure Google provider is enabled in Supabase.', 'error');
-      setShowSupabaseModal(true);
+      if (res.providerNotEnabled) {
+        setShowEnableGoogleGuideModal(true);
+      } else {
+        showToast(res.error || 'Google OAuth failed. Ensure Google provider is enabled in Supabase.', 'error');
+        setShowSupabaseModal(true);
+      }
     }
   };
 
@@ -921,6 +931,111 @@ export const SignInView: React.FC = () => {
               <p>1. Open your project on <span className="text-primary font-mono font-bold">supabase.com</span>.</p>
               <p>2. Go to <span className="font-semibold text-on-surface">Project Settings &gt; API</span> and copy your <span className="font-mono text-primary font-semibold">Project URL</span> & <span className="font-mono text-secondary font-semibold">anon key</span>.</p>
               <p>3. Under <span className="font-semibold text-on-surface">Authentication &gt; Providers</span>, ensure <span className="font-semibold text-secondary">Google</span> is toggled ON.</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* GOOGLE PROVIDER SETUP / ENABLE GUIDE MODAL */}
+      {showEnableGoogleGuideModal && (
+        <div className="fixed inset-0 z-50 bg-surface-container-lowest/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200">
+          <div className="bg-surface-container-high rounded-3xl p-5 sm:p-6 max-w-md w-full border border-outline-variant/30 flex flex-col space-y-4 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-outline-variant/20 pb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-surface-container flex items-center justify-center">
+                  <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24">
+                    <path
+                      d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                      fill="#4285F4"
+                    />
+                    <path
+                      d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                      fill="#34A853"
+                    />
+                    <path
+                      d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                      fill="#FBBC05"
+                    />
+                    <path
+                      d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                      fill="#EA4335"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="font-headline-sm text-sm font-bold text-on-surface">
+                    Enable Google in Supabase
+                  </h3>
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                    <span className="font-mono text-[10px] text-secondary">
+                      Connected: {getSupabaseProjectId()}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowEnableGoogleGuideModal(false)}
+                className="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-on-surface"
+              >
+                <span className="material-symbols-outlined text-[18px]">close</span>
+              </button>
+            </div>
+
+            <p className="text-xs text-on-surface-variant leading-relaxed">
+              Your Supabase project is active, but Google OAuth is not yet toggled ON in your Supabase Auth settings.
+            </p>
+
+            <div className="p-3.5 rounded-2xl bg-surface-container border border-outline-variant/30 text-xs text-on-surface-variant flex flex-col space-y-2.5">
+              <span className="font-bold text-on-surface text-xs flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-primary text-[17px]">checklist</span>
+                Quick 2-Minute Activation:
+              </span>
+
+              <div className="flex items-start gap-2">
+                <span className="w-5 h-5 rounded-full bg-primary/20 text-primary font-mono text-[11px] font-bold flex items-center justify-center shrink-0 mt-0.5">1</span>
+                <p className="text-[11px] leading-snug">
+                  Open your <a href={`https://supabase.com/dashboard/project/${getSupabaseProjectId()}/auth/providers`} target="_blank" rel="noopener noreferrer" className="text-primary font-bold underline">Supabase Auth Providers</a> dashboard.
+                </p>
+              </div>
+
+              <div className="flex items-start gap-2">
+                <span className="w-5 h-5 rounded-full bg-primary/20 text-primary font-mono text-[11px] font-bold flex items-center justify-center shrink-0 mt-0.5">2</span>
+                <p className="text-[11px] leading-snug">
+                  Click <strong className="text-on-surface">Google</strong> and switch the toggle to <strong className="text-secondary">Enabled</strong>.
+                </p>
+              </div>
+
+              <div className="flex items-start gap-2">
+                <span className="w-5 h-5 rounded-full bg-primary/20 text-primary font-mono text-[11px] font-bold flex items-center justify-center shrink-0 mt-0.5">3</span>
+                <p className="text-[11px] leading-snug">
+                  Paste your Google Cloud <strong className="text-on-surface">Client ID</strong> &amp; <strong className="text-on-surface">Secret</strong>, then click <strong className="text-on-surface">Save</strong>.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-2 pt-1">
+              <a
+                href={`https://supabase.com/dashboard/project/${getSupabaseProjectId()}/auth/providers`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full py-2.5 rounded-xl bg-primary text-on-primary font-headline-sm text-xs font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform shadow-md"
+              >
+                <span>Open Supabase Providers Dashboard</span>
+                <span className="material-symbols-outlined text-[16px]">open_in_new</span>
+              </a>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setShowEnableGoogleGuideModal(false);
+                  handleGoogleClick();
+                }}
+                className="w-full py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-headline-sm text-xs font-bold flex items-center justify-center gap-2 border border-outline-variant/30 active:scale-95 transition-transform"
+              >
+                <span>I Have Enabled It - Try Google Sign-In</span>
+                <span className="material-symbols-outlined text-[16px] text-secondary">arrow_forward</span>
+              </button>
             </div>
           </div>
         </div>

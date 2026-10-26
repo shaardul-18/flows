@@ -306,6 +306,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         const avatar = u.user_metadata?.avatar_url || u.user_metadata?.picture;
         if (u.email) {
           loginWithGoogle({ email: u.email, name, avatar });
+          setActiveTab('dashboard');
+          if (window.location.hash.includes('access_token')) {
+            window.history.replaceState(null, '', window.location.pathname + '#dashboard');
+          }
         }
       }
     });
@@ -322,6 +326,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         const avatar = u.user_metadata?.avatar_url || u.user_metadata?.picture;
         if (u.email) {
           loginWithGoogle({ email: u.email, name, avatar });
+          setActiveTab('dashboard');
+          if (window.location.hash.includes('access_token')) {
+            window.history.replaceState(null, '', window.location.pathname + '#dashboard');
+          }
         }
       }
     });

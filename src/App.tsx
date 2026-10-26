@@ -36,6 +36,10 @@ export const App: React.FC = () => {
     const handleHash = () => {
       const hash = window.location.hash.toLowerCase().replace('#', '');
       const search = window.location.search.toLowerCase();
+      // Ignore Supabase OAuth tokens in hash
+      if (hash.includes('access_token') || hash.includes('refresh_token')) {
+        return;
+      }
       if (hash === 'login' || hash === 'signin' || search.includes('login') || search.includes('signin')) {
         setActiveTab('login');
       } else if (hash && ['dashboard', 'splits', 'scanner', 'analytics', 'debts'].includes(hash)) {
